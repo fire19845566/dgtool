@@ -1,0 +1,124 @@
+---
+import type { Tool } from '../data/tools';
+interface Props { tool: Tool }
+const { tool } = Astro.props;
+const isJpeg = tool.to === 'image/jpeg';
+---
+<div
+  id="converter"
+  data-engine={tool.engine}
+  data-mime={tool.to}
+  data-ext={tool.toExt}
+  data-from={tool.fromExt.source}
+>
+  <label id="drop" for="file">
+    <strong>Choose files or drop them here</strong>
+    <span>You can select several at once</span>
+  </label>
+  <input id="file" type="file" accept={tool.accept} multiple />
+
+  {isJpeg && (
+    <div class="opts">
+      <label for="q">JPG quality</label>
+      <input id="q" type="range" min="50" max="100" value="90" />
+      <span id="qv">90%</span>
+    </div>
+  )}
+
+  <div class="bar" id="bar" hidden>
+    <button class="btn" id="dlAll" type="button">Download all</button>
+    <button class="btn ghost" id="clear" type="button">Clear list</button>
+  </div>
+
+  <ul id="list" aria-live="polite"></ul>
+</div>
+
+<script>
+  import { engines, type Engine } from '../scripts/converter';
+
+  const root = document.getElementById('converter')!;
+  const engine = engines[root.dataset.engine as Engine];
+  const mime = root.dataset.mime!;
+  const ext = root.dataset.ext!;
+  const fromRe = new RegExp(root.dataset.from!, 'i');
+
+  const input = document.getElementById('file') as HTMLInputElement;
+  const drop = document.getElementById('drop')!;
+  const list = document.getElementById('list')!;
+  const bar = document.getElementById('bar')!;
+  const q = document.getElementById('q') as HTMLInputElement | null;
+  const qv = document.getElementById('qv');
+
+  type Job = { file: File; li: HTMLLIElement };
+  const results: { name: string; url: string }[] = [];
+  const queue: Job[] = [];
+  let busy = false;
+
+  const fmt = (n: number) =>
+    n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+
+  q?.addEventListener('input', () => { if (qv) qv.textContent = q.value + '%'; });
+  input.addEventListener('change', () => { add(input.files); input.value = ''; });
+  ['dragenter', 'dragover'].forEach((e) =>
+    drop.addEventListener(e, (ev) => { ev.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((e) =>
+    drop.addEventListener(e, (ev) => { ev.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', (ev) => add((ev as DragEvent).dataTransfer?.files ?? null));
+
+  function add(files: FileList | null) {
+    if (!files) return;
+    for (const file of Array.from(files)) {
+      const li = document.createElement('li');
+      li.innerHTML =
+        '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta">Waiting…</div></div>';
+      li.querySelector('.name')!.textContent = file.name;
+      list.appendChild(li);
+      queue.push({ file, li });
+    }
+    run();
+  }
+
+  async function run() {
+    if (busy || !queue.length) return;
+    busy = true;
+    const { file, li } = queue.shift()!;
+    const meta = li.querySelector('.meta') as HTMLElement;
+    meta.textContent = 'Converting…';
+    try {
+      const quality = q ? Number(q.value) / 100 : 1;
+      const blob = await engine(file, mime, quality);
+      const url = URL.createObjectURL(blob);
+      const name = file.name.replace(fromRe, '') + '.' + ext;
+      results.push({ name, url });
+
+      const th = document.createElement('img');
+      th.className = 'thumb'; th.src = url; th.alt = '';
+      li.replaceChild(th, li.querySelector('.thumb')!);
+      meta.className = 'meta ok';
+      meta.textContent = `Done · ${fmt(file.size)} → ${fmt(blob.size)}`;
+
+      const a = document.createElement('a');
+      a.className = 'btn'; a.textContent = 'Download'; a.href = url; a.download = name;
+      li.appendChild(a);
+      bar.hidden = false;
+    } catch {
+      meta.className = 'meta err';
+      meta.textContent = 'Could not convert this file. Check that it is a valid image of the right type.';
+    }
+    busy = false;
+    run();
+  }
+
+  document.getElementById('dlAll')!.addEventListener('click', () => {
+    results.forEach((r, i) => setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = r.url; a.download = r.name;
+      document.body.appendChild(a); a.click(); a.remove();
+    }, i * 350));
+  });
+
+  document.getElementById('clear')!.addEventListener('click', () => {
+    results.forEach((r) => URL.revokeObjectURL(r.url));
+    results.length = 0; queue.length = 0; list.innerHTML = ''; bar.hidden = true;
+  });
+</script>

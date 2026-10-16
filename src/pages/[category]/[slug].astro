@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import Converter from '../../components/Converter.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import Faq from '../../components/Faq.astro';
+import { tools, bySlug, toolPath, categories } from '../../data/tools';
+
+export function getStaticPaths() {
+  return tools.map((tool) => ({
+    params: { category: tool.category, slug: tool.slug },
+    props: { tool },
+  }));
+}
+const { tool } = Astro.props;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      name: tool.name,
+      applicationCategory: 'MultimediaApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: tool.faq.map((f) => ({
+        '@type': 'Question', name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ],
+};
+---
+<Base title={tool.title} description={tool.description} jsonLd={jsonLd}>
+  <p class="crumb"><a href="/">Home</a> / <a href={`/${tool.category}`}>{categories[tool.category].label} tools</a></p>
+  <h1>{tool.h1}</h1>
+  <p class="lead">{tool.intro}</p>
+  <Converter tool={tool} />
+  <AdSlot />
+  <Faq items={tool.faq} />
+  <nav class="related" aria-label="Related tools">
+    {tool.related.map((s) => (<a href={toolPath(bySlug(s))}>{bySlug(s).name}</a>))}
+  </nav>
+</Base>
