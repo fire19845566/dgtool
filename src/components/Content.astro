@@ -1,0 +1,17 @@
+---
+import type { Tool } from '../data/tools';
+interface Props { tool: Tool }
+const { tool } = Astro.props;
+---
+<section class="notes">
+  <h2>How to convert {tool.name}</h2>
+  <ol class="steps">
+    {tool.howTo.map((s) => <li>{s}</li>)}
+  </ol>
+  {tool.sections.map((sec) => (
+    <>
+      <h2>{sec.h}</h2>
+      {sec.p.map((t) => <p>{t}</p>)}
+    </>
+  ))}
+</section>

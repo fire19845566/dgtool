@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Converter from '../../components/Converter.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/Faq.astro';
+import Content from '../../components/Content.astro';
 import { tools, bySlug, toolPath, categories } from '../../data/tools';
 
 export function getStaticPaths() {
@@ -39,6 +40,7 @@ const jsonLd = {
   <p class="lead">{tool.intro}</p>
   <Converter tool={tool} />
   <AdSlot />
+  <Content tool={tool} />
   <Faq items={tool.faq} />
   <nav class="related" aria-label="Related tools">
     {tool.related.map((s) => (<a href={toolPath(bySlug(s))}>{bySlug(s).name}</a>))}

@@ -53,3 +53,8 @@ h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;margin:0 0 12px;font-weig
 .crumb{font-size:.875rem;color:var(--muted);margin:0 0 14px}
 .crumb a{color:var(--muted)}
 h2 a{color:var(--ink)}
+.steps{margin:0 0 20px;padding-left:1.3em;max-width:62ch}
+.steps li{margin-bottom:6px}
+.notes.faq{margin-top:0;border-top:0;padding-top:0}
+.faq-title{font-size:1.15rem!important;color:var(--ink)}
+.notes h3{font-size:1rem;color:var(--ink);margin:0 0 6px}
