@@ -70,7 +70,7 @@ const isJpeg = tool.to === 'image/jpeg';
     for (const file of Array.from(files)) {
       const li = document.createElement('li');
       li.innerHTML =
-        '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta">Waiting…</div></div>';
+        '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta">Waiting…</div><div class="prog"><i></i></div></div>';
       li.querySelector('.name')!.textContent = file.name;
       list.appendChild(li);
       queue.push({ file, li });
@@ -105,6 +105,7 @@ const isJpeg = tool.to === 'image/jpeg';
       meta.className = 'meta err';
       meta.textContent = 'Could not convert this file. Check that it is a valid image of the right type.';
     }
+    li.querySelector('.prog')?.remove();
     busy = false;
     run();
   }

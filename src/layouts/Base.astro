@@ -3,6 +3,7 @@ import '../styles/global.css';
 interface Props { title: string; description: string; jsonLd?: object }
 const { title, description, jsonLd } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og-image.png', Astro.site);
 ---
 <!doctype html>
 <html lang="en">
@@ -13,17 +14,30 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#F5F8FC" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09111F" media="(prefers-color-scheme: dark)" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Quicksand:wght@600;700&display=swap" rel="stylesheet" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
-    <header class="site"><a href="/">DGTool</a></header>
+    <header class="site">
+      <a href="/" aria-label="DGTool home">
+        <picture>
+          <source srcset="/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+          <img src="/logo-light.svg" width="186" height="38" alt="dgtool.io" />
+        </picture>
+      </a>
+    </header>
     <main><slot /></main>
     <footer class="site">
       <a href="/about">About</a> · <a href="/privacy">Privacy policy</a> · <a href="/terms">Terms</a>
