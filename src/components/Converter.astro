@@ -101,9 +101,11 @@ const isJpeg = tool.to === 'image/jpeg';
       a.className = 'btn'; a.textContent = 'Download'; a.href = url; a.download = name;
       li.appendChild(a);
       bar.hidden = false;
-    } catch {
+    } catch (err) {
+      console.error('Conversion failed:', err);
+      const reason = err instanceof Error ? err.message.replace(/\s+/g, ' ').slice(0, 80) : '';
       meta.className = 'meta err';
-      meta.textContent = 'Could not convert this file. Check that it is a valid image of the right type.';
+      meta.textContent = 'Could not convert this file. Check that it is a valid image of the right type.' + (reason ? ` (${reason})` : '');
     }
     li.querySelector('.prog')?.remove();
     busy = false;
