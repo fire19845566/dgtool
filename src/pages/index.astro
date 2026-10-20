@@ -1,18 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
-import { tools, categories, toolPath } from '../data/tools';
+import ToolCard from '../components/ToolCard.astro';
+import { tools, categories } from '../data/tools';
 ---
 <Base title="DGTool – Free Online Tools That Run in Your Browser" description="Free online tools that run in your browser. Your files never leave your device.">
   <h1>Free tools that stay on your device</h1>
   <p class="lead">Pick a tool. Files are processed in your browser and never uploaded.</p>
   {Object.entries(categories).map(([key, cat]) => (
     <section>
-      <h2><a href={`/${key}`}>{cat.label} tools</a></h2>
-      <ul class="tool-list">
-        {tools.filter((t) => t.category === key).map((t) => (
-          <li><a href={toolPath(t)}>{t.name}</a><span>{t.description}</span></li>
-        ))}
-      </ul>
+      <h2 class="cat-title"><a href={`/${key}`}>{cat.label} tools</a></h2>
+      <div class="cards">
+        {tools.filter((t) => t.category === key).map((t) => <ToolCard tool={t} />)}
+      </div>
     </section>
   ))}
 </Base>

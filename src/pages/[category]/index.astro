@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { tools, categories, toolPath } from '../../data/tools';
+import ToolCard from '../../components/ToolCard.astro';
+import { tools, categories } from '../../data/tools';
 
 export function getStaticPaths() {
   return Object.keys(categories).map((category) => ({ params: { category } }));
@@ -10,9 +11,10 @@ const cat = categories[category as keyof typeof categories];
 const list = tools.filter((t) => t.category === category);
 ---
 <Base title={`Free ${cat.label} Tools – Private, No Upload | DGTool`} description={cat.blurb}>
+  <p class="crumb"><a href="/">Home</a> / {cat.label} tools</p>
   <h1>{cat.label} tools</h1>
   <p class="lead">{cat.blurb}</p>
-  <ul class="tool-list">
-    {list.map((t) => (<li><a href={toolPath(t)}>{t.name}</a><span>{t.description}</span></li>))}
-  </ul>
+  <div class="cards">
+    {list.map((t) => <ToolCard tool={t} />)}
+  </div>
 </Base>
