@@ -1,56 +1,10 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Converter from '../../components/Converter.astro';
-import Compressor from '../../components/Compressor.astro';
-import AdSlot from '../../components/AdSlot.astro';
-import Faq from '../../components/Faq.astro';
-import Content from '../../components/Content.astro';
-import ToolIcon from '../../components/ToolIcon.astro';
-import { tools, bySlug, toolPath, categories } from '../../data/tools';
+import ToolView from '../../views/ToolView.astro';
+import { toolData } from '../../data/tools';
 
 export function getStaticPaths() {
-  return tools.map((tool) => ({
-    params: { category: tool.category, slug: tool.slug },
-    props: { tool },
-  }));
+  return toolData.map((t) => ({ params: { category: t.category, slug: t.slug } }));
 }
-const { tool } = Astro.props;
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'WebApplication',
-      name: tool.name,
-      applicationCategory: 'MultimediaApplication',
-      operatingSystem: 'Any',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    },
-    {
-      '@type': 'FAQPage',
-      mainEntity: tool.faq.map((f) => ({
-        '@type': 'Question', name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-    },
-  ],
-};
+const { slug } = Astro.params;
 ---
-<Base title={tool.title} description={tool.description} jsonLd={jsonLd}>
-  <p class="crumb"><a href="/">Home</a> / <a href={`/${tool.category}`}>{categories[tool.category].label} tools</a></p>
-  <h1>{tool.h1}</h1>
-  <p class="lead">{tool.intro}</p>
-  {tool.kind === 'convert' ? <Converter tool={tool} /> : <Compressor tool={tool} />}
-  <AdSlot />
-  <Content tool={tool} />
-  <Faq items={tool.faq} />
-  <h2 class="rel-title">Related tools</h2>
-  <nav class="related" aria-label="Related tools">
-    {tool.related.map((s) => (
-      <a class="pill" href={toolPath(bySlug(s))}>
-        <ToolIcon tool={bySlug(s)} size="sm" />
-        <span>{bySlug(s).name}</span>
-      </a>
-    ))}
-  </nav>
-</Base>
+<ToolView lang="en" slug={slug!} />

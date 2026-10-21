@@ -1,18 +1,26 @@
 ---
 import '../styles/global.css';
-interface Props { title: string; description: string; jsonLd?: object }
-const { title, description, jsonLd } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+import { ui } from '../i18n/ui';
+import { LANGS, LANG_META, DEFAULT_LANG, localePath, switchPath, type Lang } from '../i18n';
+interface Props { lang: Lang; title: string; description: string; jsonLd?: object }
+const { lang, title, description, jsonLd } = Astro.props;
+const t = ui[lang];
+const meta = LANG_META[lang];
+const pathname = Astro.url.pathname;
+const canonical = new URL(pathname, Astro.site);
 const ogImage = new URL('/og-image.png', Astro.site);
+const alternates = LANGS.map((l) => ({ l, href: new URL(switchPath(pathname, lang, l), Astro.site) }));
 ---
 <!doctype html>
-<html lang="en">
+<html lang={meta.html}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={LANG_META[a.l].html} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates.find((a) => a.l === DEFAULT_LANG)!.href} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#F5F8FC" media="(prefers-color-scheme: light)" />
@@ -21,6 +29,8 @@ const ogImage = new URL('/og-image.png', Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={meta.og} />
+    {LANGS.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={LANG_META[l].og} />)}
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
@@ -31,16 +41,21 @@ const ogImage = new URL('/og-image.png', Astro.site);
   </head>
   <body>
     <header class="site">
-      <a href="/" aria-label="DGTool home">
+      <a class="logo" href={localePath(lang, '/')} aria-label={t.site.homeAria}>
         <picture>
           <source srcset="/logo-dark.svg" media="(prefers-color-scheme: dark)" />
-          <img src="/logo-light.svg" width="186" height="38" alt="dgtool.io" />
+          <img src="/logo-light.svg" width="186" height="38" alt={t.site.logoAlt} />
         </picture>
       </a>
+      <nav class="langs" aria-label={t.site.language}>
+        {alternates.map((a) => (
+          <a href={a.href.pathname} lang={LANG_META[a.l].html} hreflang={LANG_META[a.l].html} aria-current={a.l === lang ? 'true' : undefined}>{LANG_META[a.l].label}</a>
+        ))}
+      </nav>
     </header>
     <main><slot /></main>
     <footer class="site">
-      <a href="/about">About</a> · <a href="/privacy">Privacy policy</a> · <a href="/terms">Terms</a>
+      <a href={localePath(lang, '/about')}>{t.site.about}</a> · <a href={localePath(lang, '/privacy')}>{t.site.privacy}</a> · <a href={localePath(lang, '/terms')}>{t.site.terms}</a>
     </footer>
   </body>
 </html>

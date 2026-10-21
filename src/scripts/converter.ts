@@ -81,7 +81,7 @@ export const engines: Record<Engine, typeof heic> = { heic, canvas };
 // ---------------------------------------------------------------------------
 export type OutFormat = 'same' | 'jpg' | 'webp';
 export interface CompressOptions { quality: number; maxSide: number; format: OutFormat }
-export interface CompressResult { blob: Blob; ext: 'jpg' | 'png' | 'webp'; kept: boolean; note?: string; detail?: string }
+export interface CompressResult { blob: Blob; ext: 'jpg' | 'png' | 'webp'; kept: boolean; noteKey?: 'webpFallback'; colors?: number; lossless?: boolean }
 
 const EXT: Record<string, 'jpg' | 'png' | 'webp'> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
 
@@ -116,7 +116,7 @@ function pngColors(quality: number): number {
   return Math.round(Math.pow(2, 5 + 3 * t));
 }
 
-async function encodePng(d: Decoded, w: number, h: number, quality: number): Promise<{ blob: Blob; detail: string } | null> {
+async function encodePng(d: Decoded, w: number, h: number, quality: number): Promise<{ blob: Blob; colors: number; lossless: boolean } | null> {
   const c = document.createElement('canvas');
   c.width = w;
   c.height = h;
@@ -125,7 +125,7 @@ async function encodePng(d: Decoded, w: number, h: number, quality: number): Pro
   ctx.drawImage(d.src, 0, 0, w, h);
   const r = await quantizePng(ctx.getImageData(0, 0, w, h), pngColors(quality));
   if (!r) return null;
-  return { blob: r.blob, detail: r.lossless ? `${r.colors} colors, no visible change` : `${r.colors} colors` };
+  return { blob: r.blob, colors: r.colors, lossless: r.lossless };
 }
 
 export async function compressImage(file: File, o: CompressOptions): Promise<CompressResult> {
@@ -141,28 +141,30 @@ export async function compressImage(file: File, o: CompressOptions): Promise<Com
     const h = Math.max(1, Math.round(d.h * scale));
 
     let mime = wanted;
-    let note: string | undefined;
+    let noteKey: 'webpFallback' | undefined;
     let blob: Blob;
-    let detail: string | undefined;
+    let colors: number | undefined;
+    let lossless: boolean | undefined;
     const png = mime === 'image/png' ? await encodePng(d, w, h, o.quality) : null;
     if (png) {
       blob = png.blob;
-      detail = png.detail;
+      colors = png.colors;
+      lossless = png.lossless;
     } else {
       blob = await encode(d, w, h, mime, o.quality);
     }
     if (blob.type !== mime) {
       // Some browsers cannot save WebP and silently return PNG. Use JPG instead.
       mime = 'image/jpeg';
-      note = 'This browser cannot save WebP, so the image was saved as JPG.';
+      noteKey = 'webpFallback';
       blob = await encode(d, w, h, mime, o.quality);
-      detail = undefined;
+      colors = lossless = undefined;
     }
     const resized = w !== d.w || h !== d.h;
     if (!resized && mime === srcMime && blob.size >= file.size) {
-      return { blob: file, ext: EXT[srcMime], kept: true, note };
+      return { blob: file, ext: EXT[srcMime], kept: true, noteKey };
     }
-    return { blob, ext: EXT[mime], kept: false, note, detail };
+    return { blob, ext: EXT[mime], kept: false, noteKey, colors, lossless };
   } finally {
     d.done();
   }

@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Converter from '../components/Converter.astro';
+import Compressor from '../components/Compressor.astro';
+import AdSlot from '../components/AdSlot.astro';
+import Faq from '../components/Faq.astro';
+import Content from '../components/Content.astro';
+import ToolIcon from '../components/ToolIcon.astro';
+import { getTool, toolPath } from '../data/tools';
+import { ui } from '../i18n/ui';
+import { localePath, type Lang } from '../i18n';
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const t = ui[lang];
+const tool = getTool(slug, lang);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      name: tool.name,
+      applicationCategory: 'MultimediaApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: tool.faq.map((f) => ({
+        '@type': 'Question', name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ],
+};
+const related = tool.related.map((s) => getTool(s, lang));
+---
+<Base lang={lang} title={tool.title} description={tool.description} jsonLd={jsonLd}>
+  <p class="crumb">
+    <a href={localePath(lang, '/')}>{t.nav.home}</a> / <a href={localePath(lang, `/${tool.category}`)}>{t.categories[tool.category].title}</a>
+  </p>
+  <h1>{tool.h1}</h1>
+  <p class="lead">{tool.intro}</p>
+  {tool.kind === 'convert' ? <Converter tool={tool} lang={lang} /> : <Compressor tool={tool} lang={lang} />}
+  <AdSlot />
+  <Content tool={tool} lang={lang} />
+  <Faq items={tool.faq} lang={lang} />
+  <h2 class="rel-title">{t.content.related}</h2>
+  <nav class="related" aria-label={t.content.related}>
+    {related.map((r) => (
+      <a class="pill" href={toolPath(r, lang)}>
+        <ToolIcon tool={r} size="sm" />
+        <span>{r.name}</span>
+      </a>
+    ))}
+  </nav>
+</Base>

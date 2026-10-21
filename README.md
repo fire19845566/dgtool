@@ -22,3 +22,17 @@ Browser-only image converters. One entry in `src/data/tools.ts` = one indexable 
 ## Brand
 Colors and fonts live as CSS variables at the top of `src/styles/global.css`.
 Logo files are in `public/` (logo-light.svg, logo-dark.svg, favicon.svg, apple-touch-icon.png, og-image.png).
+
+## Languages
+English lives at the site root, other languages under a prefix (`/zh-tw/...`).
+All text is in `src/i18n/`: `ui.ts` (interface strings), `content/<lang>.ts` (tool copy, keyed by slug),
+`pages.ts` (About, Privacy, Terms). Missing tool copy falls back to English.
+
+Add a language (for example Japanese, `ja`):
+1. `src/i18n/index.ts`: add `'ja'` to `LANGS` and an entry in `LANG_META`.
+2. `src/i18n/ui.ts`: add a `ja` dictionary (same keys as `en`) and list it in `ui`.
+3. `src/i18n/content/ja.ts`: copy `zh-tw.ts`, translate it, and register it in `content/index.ts`.
+4. `src/i18n/pages.ts`: add `ja` pages.
+5. Copy the folder `src/pages/zh-tw/` to `src/pages/ja/` and change `lang="zh-tw"` to `lang="ja"` in each file.
+6. `src/styles/global.css`: add a `:lang(ja)` font stack next to `:lang(zh-TW)`.
+Each tool added later needs copy in every language (or it shows in English).

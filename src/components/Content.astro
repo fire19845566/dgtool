@@ -1,17 +1,20 @@
 ---
 import type { Tool } from '../data/tools';
-interface Props { tool: Tool }
-const { tool } = Astro.props;
+import { ui } from '../i18n/ui';
+import { fmt, type Lang } from '../i18n';
+interface Props { tool: Tool; lang: Lang }
+const { tool, lang } = Astro.props;
+const t = ui[lang].content;
 ---
 <section class="notes">
-  <h2>{tool.kind === 'compress' ? 'How to compress images' : `How to convert ${tool.name}`}</h2>
+  <h2>{tool.kind === 'compress' ? t.howToCompress : fmt(t.howToConvert, { name: tool.name })}</h2>
   <ol class="steps">
     {tool.howTo.map((s) => <li>{s}</li>)}
   </ol>
   {tool.sections.map((sec) => (
     <>
       <h2>{sec.h}</h2>
-      {sec.p.map((t) => <p>{t}</p>)}
+      {sec.p.map((p) => <p>{p}</p>)}
     </>
   ))}
 </section>

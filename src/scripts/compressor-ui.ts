@@ -1,6 +1,11 @@
 import { compressImage, type OutFormat } from './converter';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+// Localized strings are passed in by the page as JSON (see Compressor.astro).
+const T = JSON.parse($('compressor').dataset.i18n || '{}') as Record<string, string>;
+const f = (s: string, v: Record<string, string | number>) =>
+  s.replace(/\{(\w+)\}/g, (_, k) => (k in v ? String(v[k]) : `{${k}}`));
 const input = $<HTMLInputElement>('file');
 const drop = $('drop');
 const list = $('list');
@@ -27,15 +32,16 @@ function add(files: FileList | null) {
   for (const file of Array.from(files)) {
     const li = document.createElement('li');
     li.innerHTML =
-      '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta">Waiting…</div><div class="prog"><i></i></div></div>';
+      '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta"></div><div class="prog"><i></i></div></div>';
     li.querySelector('.name')!.textContent = file.name;
+    (li.querySelector('.meta') as HTMLElement).textContent = T.waiting;
     list.appendChild(li);
     const ok = TYPES.includes(file.type) || SUPPORTED.test(file.name);
     const item: Item = { file, li, ok };
     if (!ok) {
       const m = li.querySelector('.meta') as HTMLElement;
       m.className = 'meta err';
-      m.textContent = 'Unsupported file. Please use JPG, PNG or WebP.';
+      m.textContent = T.unsupported;
       li.querySelector('.prog')?.remove();
     }
     items.push(item);
@@ -72,7 +78,7 @@ async function kick() {
 async function processItem(it: Item) {
   const meta = it.li.querySelector('.meta') as HTMLElement;
   meta.className = 'meta';
-  meta.textContent = 'Compressing…';
+  meta.textContent = T.compressing;
   if (!it.li.querySelector('.prog')) {
     const p = document.createElement('div');
     p.className = 'prog';
@@ -98,21 +104,21 @@ async function processItem(it: Item) {
 
     meta.className = 'meta ok';
     if (r.kept) {
-      meta.textContent = `Already well compressed · kept the original (${fmt(it.file.size)})`;
+      meta.textContent = f(T.kept, { size: fmt(it.file.size) });
     } else {
       const pct = Math.round((1 - r.blob.size / it.file.size) * 100);
       const sign = pct >= 0 ? '−' : '+';
       if (pct < 0) meta.className = 'meta';   // bigger than the original: do not style it as a success
-      meta.textContent = `Done · ${fmt(it.file.size)} → ${fmt(r.blob.size)} (${sign}${Math.abs(pct)}%)`;
+      meta.textContent = f(T.done, { before: fmt(it.file.size), after: fmt(r.blob.size), sign, pct: Math.abs(pct) });
     }
-    if (r.detail) meta.textContent += ' · ' + r.detail;
-    if (r.note) meta.textContent += ' · ' + r.note;
+    if (r.colors) meta.textContent += ' · ' + f(r.lossless ? T.detailLossless : T.detailColors, { n: r.colors });
+    if (r.noteKey === 'webpFallback') meta.textContent += ' · ' + T.noteWebp;
 
     let a = it.li.querySelector('a.btn') as HTMLAnchorElement | null;
     if (!a) {
       a = document.createElement('a');
       a.className = 'btn';
-      a.textContent = 'Download';
+      a.textContent = T.download;
       it.li.appendChild(a);
     }
     a.href = it.url;
@@ -121,7 +127,7 @@ async function processItem(it: Item) {
     console.error('Compression failed:', err);
     it.outSize = undefined;
     meta.className = 'meta err';
-    meta.textContent = 'Could not compress this file. Check that it is a valid JPG, PNG or WebP image.';
+    meta.textContent = T.failed;
   } finally {
     it.li.querySelector('.prog')?.remove();
   }
@@ -137,8 +143,8 @@ function updateSummary() {
   summary.hidden = false;
   summary.textContent =
     saved > 0
-      ? `Saved ${fmt(saved)} (−${Math.round((saved / before) * 100)}%) across ${done.length} image${done.length > 1 ? 's' : ''}`
-      : 'No size reduction with these settings. Try a lower quality or a smaller size.';
+      ? f(done.length > 1 ? T.summarySavedMany : T.summarySavedOne, { saved: fmt(saved), pct: Math.round((saved / before) * 100), n: done.length })
+      : T.summaryNone;
 }
 
 function scheduleRerun() {

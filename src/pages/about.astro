@@ -1,26 +1,4 @@
 ---
-import Base from '../layouts/Base.astro';
-import { categories } from '../data/tools';
+import StaticPage from '../views/StaticPage.astro';
 ---
-<Base title="About DGTool" description="DGTool offers free online tools that run in your browser, so your files stay on your device.">
-  <h1>About DGTool</h1>
-  <p class="lead">Free online tools that work in your browser and keep your files on your device.</p>
-
-  <h2>What DGTool is</h2>
-  <p>DGTool is an independent project that builds simple, free tools for everyday tasks. The first set converts image formats, such as turning iPhone HEIC photos into JPG or PNG, and WebP images into JPG or PNG. More tools are added over time.</p>
-
-  <h2>Why it is different</h2>
-  <p>Many online converters ask you to upload your files to a server. DGTool does the work inside your own browser instead. Your photos are not sent to us, which makes the tools faster for many files and keeps your pictures private.</p>
-
-  <h2>How it works</h2>
-  <p>When you pick a file, a small program on the page reads it and converts it on your device. When it finishes, you download the result straight from your browser. There is no sign-up, no file limit and no watermark.</p>
-
-  <h2>How the site is supported</h2>
-  <p>DGTool is free to use. To cover hosting and development, the site may show advertising. You can read how advertising and cookies are handled in our <a href="/privacy">privacy policy</a>.</p>
-
-  <h2>Tools available now</h2>
-  <p>Browse the <a href="/image">image tools</a>, or go back to the <a href="/">home page</a> to see everything.</p>
-
-  <h2>Contact</h2>
-  <p>Questions, bug reports or tool suggestions are welcome at <a href="mailto:contact@dgtool.io">contact@dgtool.io</a>.</p>
-</Base>
+<StaticPage lang="en" page="about" />

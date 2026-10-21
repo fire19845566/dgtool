@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { pages, type PageKey } from '../i18n/pages';
+import { fmt, localePath, type Lang } from '../i18n';
+interface Props { lang: Lang; page: PageKey }
+const { lang, page } = Astro.props;
+const doc = pages[lang][page];
+const links = { home: localePath(lang, '/'), image: localePath(lang, '/image'), privacy: localePath(lang, '/privacy') };
+---
+<Base lang={lang} title={doc.title} description={doc.description}>
+  <h1>{doc.h1}</h1>
+  <p class="lead">{doc.lead}</p>
+  {doc.sections.map((s) => (
+    <>
+      <h2>{s.h}</h2>
+      {s.p.map((p) => <p set:html={fmt(p, links)} />)}
+    </>
+  ))}
+</Base>

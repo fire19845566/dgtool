@@ -1,7 +1,11 @@
 ---
 import type { ConvertTool } from '../data/tools';
-interface Props { tool: ConvertTool }
-const { tool } = Astro.props;
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+interface Props { tool: ConvertTool; lang: Lang }
+const { tool, lang } = Astro.props;
+const t = ui[lang];
+const strings = { ...t.common, ...t.converter };
 const isJpeg = tool.to === 'image/jpeg';
 ---
 <div
@@ -10,24 +14,25 @@ const isJpeg = tool.to === 'image/jpeg';
   data-mime={tool.to}
   data-ext={tool.toExt}
   data-from={tool.fromExt.source}
+  data-i18n={JSON.stringify(strings)}
 >
   <label id="drop" for="file">
-    <strong>Choose files or drop them here</strong>
-    <span>You can select several at once</span>
+    <strong>{t.converter.dropTitle}</strong>
+    <span>{t.converter.dropSub}</span>
   </label>
   <input id="file" type="file" accept={tool.accept} multiple />
 
   {isJpeg && (
     <div class="opts">
-      <label for="q">JPG quality</label>
+      <label for="q">{t.converter.jpgQuality}</label>
       <input id="q" type="range" min="50" max="100" value="90" />
       <span id="qv">90%</span>
     </div>
   )}
 
   <div class="bar" id="bar" hidden>
-    <button class="btn" id="dlAll" type="button">Download all</button>
-    <button class="btn ghost" id="clear" type="button">Clear list</button>
+    <button class="btn" id="dlAll" type="button">{t.common.downloadAll}</button>
+    <button class="btn ghost" id="clear" type="button">{t.common.clear}</button>
   </div>
 
   <ul id="list" aria-live="polite"></ul>
@@ -41,6 +46,9 @@ const isJpeg = tool.to === 'image/jpeg';
   const mime = root.dataset.mime!;
   const ext = root.dataset.ext!;
   const fromRe = new RegExp(root.dataset.from!, 'i');
+  const T = JSON.parse(root.dataset.i18n || '{}') as Record<string, string>;
+  const f = (s: string, v: Record<string, string | number>) =>
+    s.replace(/\{(\w+)\}/g, (_, k) => (k in v ? String(v[k]) : `{${k}}`));
 
   const input = document.getElementById('file') as HTMLInputElement;
   const drop = document.getElementById('drop')!;
@@ -70,8 +78,9 @@ const isJpeg = tool.to === 'image/jpeg';
     for (const file of Array.from(files)) {
       const li = document.createElement('li');
       li.innerHTML =
-        '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta">Waiting…</div><div class="prog"><i></i></div></div>';
+        '<div class="thumb"></div><div class="info"><div class="name"></div><div class="meta"></div><div class="prog"><i></i></div></div>';
       li.querySelector('.name')!.textContent = file.name;
+      (li.querySelector('.meta') as HTMLElement).textContent = T.waiting;
       list.appendChild(li);
       queue.push({ file, li });
     }
@@ -83,7 +92,7 @@ const isJpeg = tool.to === 'image/jpeg';
     busy = true;
     const { file, li } = queue.shift()!;
     const meta = li.querySelector('.meta') as HTMLElement;
-    meta.textContent = 'Converting…';
+    meta.textContent = T.converting;
     try {
       const quality = q ? Number(q.value) / 100 : 1;
       const blob = await engine(file, mime, quality);
@@ -95,17 +104,17 @@ const isJpeg = tool.to === 'image/jpeg';
       th.className = 'thumb'; th.src = url; th.alt = '';
       li.replaceChild(th, li.querySelector('.thumb')!);
       meta.className = 'meta ok';
-      meta.textContent = `Done · ${fmt(file.size)} → ${fmt(blob.size)}`;
+      meta.textContent = f(T.done, { from: fmt(file.size), to: fmt(blob.size) });
 
       const a = document.createElement('a');
-      a.className = 'btn'; a.textContent = 'Download'; a.href = url; a.download = name;
+      a.className = 'btn'; a.textContent = T.download; a.href = url; a.download = name;
       li.appendChild(a);
       bar.hidden = false;
     } catch (err) {
       console.error('Conversion failed:', err);
       const reason = err instanceof Error ? err.message.replace(/\s+/g, ' ').slice(0, 80) : '';
       meta.className = 'meta err';
-      meta.textContent = 'Could not convert this file. Check that it is a valid image of the right type.' + (reason ? ` (${reason})` : '');
+      meta.textContent = T.failed + (reason ? ` (${reason})` : '');
     }
     li.querySelector('.prog')?.remove();
     busy = false;

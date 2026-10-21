@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { getTools, categoryKeys } from '../data/tools';
+import { ui } from '../i18n/ui';
+import { localePath, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const tools = getTools(lang);
+---
+<Base lang={lang} title={t.home.title} description={t.home.description}>
+  <h1>{t.home.h1}</h1>
+  <p class="lead">{t.home.lead}</p>
+  {categoryKeys.map((key) => (
+    <section>
+      <h2 class="cat-title"><a href={localePath(lang, `/${key}`)}>{t.categories[key].title}</a></h2>
+      <div class="cards">
+        {tools.filter((x) => x.category === key).map((tool) => <ToolCard tool={tool} lang={lang} />)}
+      </div>
+    </section>
+  ))}
+</Base>

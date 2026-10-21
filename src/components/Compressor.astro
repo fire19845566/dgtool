@@ -1,24 +1,28 @@
 ---
 import type { CompressTool } from '../data/tools';
-interface Props { tool: CompressTool }
-const { tool } = Astro.props;
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+interface Props { tool: CompressTool; lang: Lang }
+const { tool, lang } = Astro.props;
+const t = ui[lang];
+const strings = { ...t.common, ...t.compressor };
 ---
-<div id="compressor">
+<div id="compressor" data-i18n={JSON.stringify(strings)}>
   <label id="drop" for="file">
-    <strong>Choose images or drop them here</strong>
-    <span>JPG, PNG or WebP · you can select several at once</span>
+    <strong>{t.compressor.dropTitle}</strong>
+    <span>{t.compressor.dropSub}</span>
   </label>
   <input id="file" type="file" accept={tool.accept} multiple />
 
   <div class="opts">
-    <label for="q">Quality</label>
+    <label for="q">{t.compressor.quality}</label>
     <input id="q" type="range" min="40" max="95" value="80" />
     <span id="qv">80%</span>
   </div>
   <div class="opts selects">
-    <label>Longest side
+    <label>{t.compressor.longestSide}
       <select id="size" class="sel">
-        <option value="0">Original</option>
+        <option value="0">{t.compressor.original}</option>
         <option value="3840">3840 px</option>
         <option value="2560">2560 px</option>
         <option value="1920">1920 px</option>
@@ -26,20 +30,20 @@ const { tool } = Astro.props;
         <option value="1024">1024 px</option>
       </select>
     </label>
-    <label>Format
+    <label>{t.compressor.format}
       <select id="fmt" class="sel">
-        <option value="same">Same as original</option>
+        <option value="same">{t.compressor.formatSame}</option>
         <option value="jpg">JPG</option>
         <option value="webp">WebP</option>
       </select>
     </label>
   </div>
-  <p class="hint">PNG is compressed by reducing its colors, and Quality sets how many are kept. For photos, WebP or JPG gives much smaller files. JPG fills transparent areas with white.</p>
+  <p class="hint">{t.compressor.hint}</p>
 
   <p id="summary" class="summary" hidden></p>
   <div class="bar" id="bar" hidden>
-    <button class="btn" id="dlAll" type="button">Download all</button>
-    <button class="btn ghost" id="clear" type="button">Clear list</button>
+    <button class="btn" id="dlAll" type="button">{t.common.downloadAll}</button>
+    <button class="btn ghost" id="clear" type="button">{t.common.clear}</button>
   </div>
 
   <ul id="list" aria-live="polite"></ul>

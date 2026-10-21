@@ -1,10 +1,11 @@
 ---
 import ToolIcon from './ToolIcon.astro';
 import { toolPath, type Tool } from '../data/tools';
-interface Props { tool: Tool }
-const { tool } = Astro.props;
+import type { Lang } from '../i18n';
+interface Props { tool: Tool; lang: Lang }
+const { tool, lang } = Astro.props;
 ---
-<a class="card" href={toolPath(tool)}>
+<a class="card" href={toolPath(tool, lang)}>
   <ToolIcon tool={tool} />
   <span class="nm">{tool.name}</span>
   <span class="ds">{tool.description}</span>
