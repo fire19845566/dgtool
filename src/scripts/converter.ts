@@ -1,4 +1,5 @@
 // Browser-only conversion. Each engine takes a File and returns a Blob.
+import { quantizePng } from './png-quant';
 export type Engine = 'heic' | 'canvas';
 
 // iOS and iPadOS Safari limit canvas size to roughly 16.7 million pixels.
@@ -80,7 +81,7 @@ export const engines: Record<Engine, typeof heic> = { heic, canvas };
 // ---------------------------------------------------------------------------
 export type OutFormat = 'same' | 'jpg' | 'webp';
 export interface CompressOptions { quality: number; maxSide: number; format: OutFormat }
-export interface CompressResult { blob: Blob; ext: 'jpg' | 'png' | 'webp'; kept: boolean; note?: string }
+export interface CompressResult { blob: Blob; ext: 'jpg' | 'png' | 'webp'; kept: boolean; note?: string; detail?: string }
 
 const EXT: Record<string, 'jpg' | 'png' | 'webp'> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
 
@@ -109,6 +110,24 @@ function encode(d: Decoded, w: number, h: number, mime: string, quality: number)
   );
 }
 
+// Quality slider (0.40 to 0.95) -> palette size (32 to 256 colors).
+function pngColors(quality: number): number {
+  const t = Math.max(0, Math.min(1, (quality - 0.4) / 0.45));
+  return Math.round(Math.pow(2, 5 + 3 * t));
+}
+
+async function encodePng(d: Decoded, w: number, h: number, quality: number): Promise<{ blob: Blob; detail: string } | null> {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true })!;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(d.src, 0, 0, w, h);
+  const r = await quantizePng(ctx.getImageData(0, 0, w, h), pngColors(quality));
+  if (!r) return null;
+  return { blob: r.blob, detail: r.lossless ? `${r.colors} colors, no visible change` : `${r.colors} colors` };
+}
+
 export async function compressImage(file: File, o: CompressOptions): Promise<CompressResult> {
   const srcMime = guessMime(file);
   const wanted =
@@ -123,18 +142,27 @@ export async function compressImage(file: File, o: CompressOptions): Promise<Com
 
     let mime = wanted;
     let note: string | undefined;
-    let blob = await encode(d, w, h, mime, o.quality);
+    let blob: Blob;
+    let detail: string | undefined;
+    const png = mime === 'image/png' ? await encodePng(d, w, h, o.quality) : null;
+    if (png) {
+      blob = png.blob;
+      detail = png.detail;
+    } else {
+      blob = await encode(d, w, h, mime, o.quality);
+    }
     if (blob.type !== mime) {
       // Some browsers cannot save WebP and silently return PNG. Use JPG instead.
       mime = 'image/jpeg';
       note = 'This browser cannot save WebP, so the image was saved as JPG.';
       blob = await encode(d, w, h, mime, o.quality);
+      detail = undefined;
     }
     const resized = w !== d.w || h !== d.h;
     if (!resized && mime === srcMime && blob.size >= file.size) {
       return { blob: file, ext: EXT[srcMime], kept: true, note };
     }
-    return { blob, ext: EXT[mime], kept: false, note };
+    return { blob, ext: EXT[mime], kept: false, note, detail };
   } finally {
     d.done();
   }

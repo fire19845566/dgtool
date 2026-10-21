@@ -105,6 +105,7 @@ async function processItem(it: Item) {
       if (pct < 0) meta.className = 'meta';   // bigger than the original: do not style it as a success
       meta.textContent = `Done · ${fmt(it.file.size)} → ${fmt(r.blob.size)} (${sign}${Math.abs(pct)}%)`;
     }
+    if (r.detail) meta.textContent += ' · ' + r.detail;
     if (r.note) meta.textContent += ' · ' + r.note;
 
     let a = it.li.querySelector('a.btn') as HTMLAnchorElement | null;

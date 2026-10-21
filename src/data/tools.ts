@@ -281,9 +281,10 @@ export const tools: Tool[] = [
         ],
       },
       {
-        h: "What about PNG?",
+        h: "How PNG files are compressed",
         p: [
-          "PNG is lossless, so saving a PNG again as a PNG saves little unless you also reduce its size. For much smaller files, choose WebP or JPG as the format. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency.",
+          "PNG itself does not have a quality setting, so PNG images are made smaller by reducing the number of colors, up to 256, and saving the result as an indexed PNG. For logos, icons and screenshots this often makes the file much smaller with no visible change, and when an image already uses few colors the result looks identical to the original.",
+          "For photos saved as PNG, a low quality setting can cause visible banding in smooth areas, so keep the quality high, or choose WebP or JPG as the format for much smaller files. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency.",
         ],
       },
       {
@@ -306,7 +307,8 @@ export const tools: Tool[] = [
       { q: "Will the quality look worse?", a: "At about 75% to 85% the difference is usually hard to notice at normal viewing size, but zooming in can reveal it. Keep your originals and compare the result before replacing anything." },
       { q: "Why was my file kept the same size?", a: "Some files are already well compressed, and saving them again would make them larger. In that case we keep the original instead of giving you a bigger file." },
       { q: "Which format is best for the web?", a: "WebP is often smaller than JPG at a similar quality and works in modern browsers. JPG is the safest choice if you need the image to open everywhere." },
-      { q: "Why does my PNG barely shrink?", a: "PNG is a lossless format, so there is little to remove. Choose WebP or JPG as the output format, or reduce the longest side, to make it much smaller." },
+      { q: "How is a PNG compressed here?", a: "The image is reduced to a smaller set of colors, up to 256, and saved as an indexed PNG. The quality slider controls how many colors are kept. Images that already use few colors, such as many logos and icons, can shrink with no change at all." },
+      { q: "Why did my PNG barely shrink or get kept as is?", a: "Some PNG files are already well optimized, and tiny icons have little left to remove. For a photo saved as PNG, try WebP or JPG as the format, or reduce the longest side." },
       { q: "Can I compress iPhone HEIC photos?", a: "Not directly on this page. Convert them first with the HEIC to JPG tool, then compress the JPG." },
     ],
     related: ['heic-to-jpg', 'webp-to-jpg', 'webp-to-png'],
