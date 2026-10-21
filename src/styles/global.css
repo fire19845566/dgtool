@@ -28,17 +28,23 @@
 }
 :lang(zh-TW) body{line-height:1.75}
 :lang(zh-TW) h1,:lang(zh-TW) h2,:lang(zh-TW) h3{letter-spacing:0}
+:lang(ja){
+  --font-body:"DM Sans",system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo","Noto Sans JP",sans-serif;
+  --font-head:"Quicksand","DM Sans",system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo","Noto Sans JP",sans-serif;
+}
+:lang(ja) body{line-height:1.8;word-break:auto-phrase}
+:lang(ja) h1,:lang(ja) h2,:lang(ja) h3{letter-spacing:0}
 *{box-sizing:border-box}
 html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--font-body)}
 a{color:var(--link)}
-h1,h2,h3{font-family:var(--font-head);letter-spacing:-.01em}
+h1,h2,h3{font-family:var(--font-head);letter-spacing:-.01em;text-wrap:balance}
 main{max-width:720px;margin:0 auto;padding:28px 20px 64px}
 header.site,footer.site{max-width:720px;margin:0 auto;padding:18px 20px}
-header.site{display:flex;align-items:center;justify-content:space-between;gap:16px}
+header.site{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px}
 header.site .logo{display:inline-block;line-height:0}
-.langs{display:flex;gap:14px;font-size:.875rem}
-.langs a{color:var(--muted);text-decoration:none}
+.langs{display:flex;gap:14px;font-size:.875rem;margin-left:auto}
+.langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
 .langs a:hover{text-decoration:underline}
 .langs a[aria-current]{color:var(--ink);font-weight:600}
 header.site img{display:block;height:38px;width:auto}

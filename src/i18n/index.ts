@@ -1,12 +1,13 @@
 // Language helpers. To add a language: add it to LANGS and LANG_META, then add
 // its files (src/i18n/ui.ts, content/<lang>.ts, pages.ts) and a src/pages/<lang>/ folder.
-export const LANGS = ['en', 'zh-tw'] as const;
+export const LANGS = ['en', 'zh-tw', 'ja'] as const;
 export type Lang = (typeof LANGS)[number];
 export const DEFAULT_LANG: Lang = 'en';
 
 export const LANG_META: Record<Lang, { label: string; html: string; og: string }> = {
   en: { label: 'English', html: 'en', og: 'en_US' },
   'zh-tw': { label: '繁體中文', html: 'zh-TW', og: 'zh_TW' },
+  ja: { label: '日本語', html: 'ja', og: 'ja_JP' },
 };
 
 // "/image/x" -> "/zh-tw/image/x"; the default language has no prefix.

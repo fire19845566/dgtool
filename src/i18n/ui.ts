@@ -100,4 +100,53 @@ const zhTw: UI = {
   },
 };
 
-export const ui: Record<Lang, UI> = { en, 'zh-tw': zhTw };
+const ja: UI = {
+  site: { name: 'DGTool', homeAria: 'DGTool ホーム', logoAlt: 'dgtool.io', about: 'このサイトについて', privacy: 'プライバシーポリシー', terms: '利用規約', language: '言語' },
+  nav: { home: 'ホーム' },
+  home: {
+    title: 'DGTool – ブラウザで使える無料オンラインツール',
+    description: 'ブラウザ上で動作する無料のオンラインツール。ファイルがお使いのデバイスの外に出ることはありません。',
+    h1: 'ファイルがデバイスの外に出ない無料ツール',
+    lead: 'ツールを選んでください。ファイルはブラウザ内で処理され、アップロードされません。',
+  },
+  categories: {
+    image: {
+      title: '画像ツール',
+      metaTitle: '無料の画像ツール – アップロード不要・プライバシー保護 | DGTool',
+      blurb: 'ブラウザ上で、画像の変換と圧縮をプライベートに行えます。',
+    },
+  },
+  content: { howToConvert: '{name}する方法', howToCompress: '画像を圧縮する方法', faq: 'よくある質問', related: '関連ツール' },
+  common: { download: 'ダウンロード', downloadAll: 'すべてダウンロード', clear: 'リストをクリア', waiting: '待機中…' },
+  converter: {
+    dropTitle: 'ファイルを選択、またはここにドロップ',
+    dropSub: '複数のファイルをまとめて選択できます',
+    jpgQuality: 'JPG の品質',
+    converting: '変換中…',
+    done: '完了 · {from} → {to}',
+    failed: 'このファイルを変換できませんでした。正しい形式の有効な画像かどうかご確認ください。',
+  },
+  compressor: {
+    dropTitle: '画像を選択、またはここにドロップ',
+    dropSub: 'JPG・PNG・WebP · 複数まとめて選択できます',
+    quality: '品質',
+    longestSide: '長辺のサイズ',
+    original: '元のサイズ',
+    format: '形式',
+    formatSame: '元と同じ',
+    hint: 'PNG は色数を減らして圧縮します。「品質」は残す色数を決めます。写真は WebP または JPG にすると、ファイルがずっと小さくなります。JPG では透明な部分が白で塗りつぶされます。',
+    compressing: '圧縮中…',
+    unsupported: 'このファイルには対応していません。JPG、PNG、WebP をご利用ください。',
+    kept: '十分に圧縮済み · 元のファイルを保持しました（{size}）',
+    done: '完了 · {before} → {after}（{sign}{pct}%）',
+    failed: 'このファイルを圧縮できませんでした。有効な JPG、PNG、WebP 画像かどうかご確認ください。',
+    summarySavedOne: '{n} 枚の画像で {saved} 削減（−{pct}%）',
+    summarySavedMany: '{n} 枚の画像で {saved} 削減（−{pct}%）',
+    summaryNone: 'この設定ではファイルサイズが小さくなりませんでした。品質を下げるか、サイズを小さくしてみてください。',
+    noteWebp: 'このブラウザでは WebP を保存できないため、JPG として保存しました。',
+    detailColors: '{n} 色',
+    detailLossless: '{n} 色・見た目の変化なし',
+  },
+};
+
+export const ui: Record<Lang, UI> = { en, 'zh-tw': zhTw, ja };
