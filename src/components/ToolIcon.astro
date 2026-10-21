@@ -1,13 +1,14 @@
 ---
-// Format icon generated from the slug: "heic-to-jpg" -> [HEIC] -> [JPG]
-interface Props { slug: string; size?: 'md' | 'sm' }
-const { slug, size = 'md' } = Astro.props;
-const [from, to] = slug.split('-to-');
+// Format icon. Convert tools get "heic-to-jpg" -> [HEIC] -> [JPG] automatically.
+import { iconOf, type Tool } from '../data/tools';
+interface Props { tool: Tool; size?: 'md' | 'sm' }
+const { tool, size = 'md' } = Astro.props;
+const { from, to, f } = iconOf(tool);
 ---
 <span class={`ic ${size}`} aria-hidden="true">
-  <span class="t src">{from.toUpperCase()}</span>
+  <span class="t src">{from}</span>
   <svg class="arr" viewBox="0 0 28 16" focusable="false">
     <path d="M2 8h22M18 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
-  <span class="t dst" data-f={to}>{to.toUpperCase()}</span>
+  <span class="t dst" data-f={f}>{to}</span>
 </span>

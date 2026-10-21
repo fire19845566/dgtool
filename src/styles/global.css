@@ -9,6 +9,7 @@
   /* target-format tints for tool icons */
   --jpg-bg:rgba(0,125,255,.12); --jpg-bd:rgba(0,125,255,.38); --jpg-tx:#0062CC;
   --png-bg:rgba(46,184,100,.18); --png-bd:rgba(10,107,54,.38); --png-tx:#0A6B36;
+  --size-bg:rgba(247,147,30,.16); --size-bd:rgba(138,75,0,.45); --size-tx:#8A4B00;
   --font-body:"DM Sans",system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;
   --font-head:"Quicksand","DM Sans",system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;
 }
@@ -18,6 +19,7 @@
     --link:#4DA3FF; --focus:#4DA3FF; --ok:#6FFF96; --err:#FF8A80;
     --jpg-bg:rgba(0,125,255,.22); --jpg-bd:rgba(77,163,255,.45); --jpg-tx:#4DA3FF;
     --png-bg:rgba(111,255,150,.14); --png-bd:rgba(111,255,150,.4); --png-tx:#6FFF96;
+    --size-bg:rgba(247,147,30,.16); --size-bd:rgba(247,147,30,.5); --size-tx:#F7931E;
   }
 }
 *{box-sizing:border-box}
@@ -60,6 +62,13 @@ h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;margin:0 0 12px;font-weig
 .prog i{display:block;width:40%;height:100%;background:var(--orange);animation:slide 1.1s linear infinite}
 @keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
 
+/* compressor options */
+.opts.selects{gap:22px}
+.sel{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-left:8px}
+.hint{color:var(--muted);font-size:.875rem;margin:-6px 0 14px;max-width:60ch}
+.summary{color:var(--ok);font-weight:500;margin:10px 0 0}
+.summary[hidden]{display:none}
+
 /* buttons */
 .btn{display:inline-block;background:var(--grad);color:var(--on-brand);border:0;border-radius:8px;padding:9px 18px;font:600 .95rem var(--font-body);text-decoration:none;cursor:pointer}
 .btn:hover{filter:brightness(1.06)}
@@ -101,6 +110,7 @@ h2 a{color:var(--ink)}
 .t.src{background:var(--bg);border:1.5px solid var(--line);color:var(--ink)}
 .t.dst[data-f=jpg]{background:var(--jpg-bg);border:1.5px solid var(--jpg-bd);color:var(--jpg-tx)}
 .t.dst[data-f=png]{background:var(--png-bg);border:1.5px solid var(--png-bd);color:var(--png-tx)}
+.t.dst[data-f=size]{background:var(--size-bg);border:1.5px solid var(--size-bd);color:var(--size-tx)}
 .card:hover .t.dst,.pill:hover .t.dst{background:var(--grad);border-color:transparent;color:var(--on-brand)}
 .rel-title{font-size:1.1rem;margin:32px 0 10px}
 .related{display:flex;gap:12px;flex-wrap:wrap}

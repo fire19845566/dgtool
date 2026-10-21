@@ -4,7 +4,7 @@ interface Props { tool: Tool }
 const { tool } = Astro.props;
 ---
 <section class="notes">
-  <h2>How to convert {tool.name}</h2>
+  <h2>{tool.kind === 'compress' ? 'How to compress images' : `How to convert ${tool.name}`}</h2>
   <ol class="steps">
     {tool.howTo.map((s) => <li>{s}</li>)}
   </ol>

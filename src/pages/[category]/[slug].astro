@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Converter from '../../components/Converter.astro';
+import Compressor from '../../components/Compressor.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Faq from '../../components/Faq.astro';
 import Content from '../../components/Content.astro';
@@ -39,7 +40,7 @@ const jsonLd = {
   <p class="crumb"><a href="/">Home</a> / <a href={`/${tool.category}`}>{categories[tool.category].label} tools</a></p>
   <h1>{tool.h1}</h1>
   <p class="lead">{tool.intro}</p>
-  <Converter tool={tool} />
+  {tool.kind === 'convert' ? <Converter tool={tool} /> : <Compressor tool={tool} />}
   <AdSlot />
   <Content tool={tool} />
   <Faq items={tool.faq} />
@@ -47,7 +48,7 @@ const jsonLd = {
   <nav class="related" aria-label="Related tools">
     {tool.related.map((s) => (
       <a class="pill" href={toolPath(bySlug(s))}>
-        <ToolIcon slug={s} size="sm" />
+        <ToolIcon tool={bySlug(s)} size="sm" />
         <span>{bySlug(s).name}</span>
       </a>
     ))}

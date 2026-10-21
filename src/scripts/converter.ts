@@ -74,3 +74,68 @@ async function heic(file: File, mime: string, quality: number): Promise<Blob> {
 }
 
 export const engines: Record<Engine, typeof heic> = { heic, canvas };
+
+// ---------------------------------------------------------------------------
+// Image compression
+// ---------------------------------------------------------------------------
+export type OutFormat = 'same' | 'jpg' | 'webp';
+export interface CompressOptions { quality: number; maxSide: number; format: OutFormat }
+export interface CompressResult { blob: Blob; ext: 'jpg' | 'png' | 'webp'; kept: boolean; note?: string }
+
+const EXT: Record<string, 'jpg' | 'png' | 'webp'> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+
+function guessMime(file: File): string {
+  if (file.type === 'image/jpg') return 'image/jpeg';
+  if (file.type) return file.type;
+  const m = /\.(jpe?g|png|webp)$/i.exec(file.name);
+  if (!m) return 'image/jpeg';
+  const e = m[1].toLowerCase();
+  return e === 'png' ? 'image/png' : e === 'webp' ? 'image/webp' : 'image/jpeg';
+}
+
+function encode(d: Decoded, w: number, h: number, mime: string, quality: number): Promise<Blob> {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d')!;
+  if (mime === 'image/jpeg') {            // JPG has no alpha: paint white first
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, w, h);
+  }
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(d.src, 0, 0, w, h);
+  return new Promise((res, rej) =>
+    c.toBlob((b) => (b ? res(b) : rej(new Error('encode failed'))), mime, quality),
+  );
+}
+
+export async function compressImage(file: File, o: CompressOptions): Promise<CompressResult> {
+  const srcMime = guessMime(file);
+  const wanted =
+    o.format === 'jpg' ? 'image/jpeg' : o.format === 'webp' ? 'image/webp' : EXT[srcMime] ? srcMime : 'image/jpeg';
+  const d = await decodeNative(file, srcMime);
+  try {
+    if (!d.w || !d.h) throw new Error('empty image');
+    let scale = Math.min(1, Math.sqrt(MAX_PIXELS / (d.w * d.h)));
+    if (o.maxSide > 0) scale = Math.min(scale, o.maxSide / Math.max(d.w, d.h));
+    const w = Math.max(1, Math.round(d.w * scale));
+    const h = Math.max(1, Math.round(d.h * scale));
+
+    let mime = wanted;
+    let note: string | undefined;
+    let blob = await encode(d, w, h, mime, o.quality);
+    if (blob.type !== mime) {
+      // Some browsers cannot save WebP and silently return PNG. Use JPG instead.
+      mime = 'image/jpeg';
+      note = 'This browser cannot save WebP, so the image was saved as JPG.';
+      blob = await encode(d, w, h, mime, o.quality);
+    }
+    const resized = w !== d.w || h !== d.h;
+    if (!resized && mime === srcMime && blob.size >= file.size) {
+      return { blob: file, ext: EXT[srcMime], kept: true, note };
+    }
+    return { blob, ext: EXT[mime], kept: false, note };
+  } finally {
+    d.done();
+  }
+}

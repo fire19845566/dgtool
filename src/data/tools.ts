@@ -1,5 +1,5 @@
 // One entry = one indexable page. Add a tool by adding an object here.
-export interface Tool {
+interface ToolBase {
   slug: string;
   category: 'image';
   name: string;
@@ -8,20 +8,32 @@ export interface Tool {
   description: string;
   intro: string;
   accept: string;          // <input accept>
-  fromExt: RegExp;         // used to rename the output file
-  to: 'image/jpeg' | 'image/png';
-  toExt: 'jpg' | 'png';
-  engine: 'heic' | 'canvas';
+  icon?: { from: string; to: string; f: string };   // overrides the auto icon
   howTo: string[];                         // numbered steps
   sections: { h: string; p: string[] }[];  // explanatory content
   faq: { q: string; a: string }[];
   related: string[];
 }
 
+export interface ConvertTool extends ToolBase {
+  kind: 'convert';
+  fromExt: RegExp;         // used to rename the output file
+  to: 'image/jpeg' | 'image/png';
+  toExt: 'jpg' | 'png';
+  engine: 'heic' | 'canvas';
+}
+
+export interface CompressTool extends ToolBase {
+  kind: 'compress';
+}
+
+export type Tool = ConvertTool | CompressTool;
+
 export const tools: Tool[] = [
   {
     slug: 'heic-to-jpg',
     category: 'image',
+    kind: 'convert',
     name: 'HEIC to JPG',
     h1: 'HEIC to JPG, without uploading anything',
     title: 'HEIC to JPG Converter – Free, Private, No Upload',
@@ -78,11 +90,12 @@ export const tools: Tool[] = [
       { q: 'Is there a limit on how many photos I can convert?', a: 'We do not set a limit and there is no sign-up. Very large batches depend on your device\'s memory, so convert a few photos at a time if things slow down.' },
       { q: 'Will the converted photo keep its location data?', a: 'Not necessarily. Some information stored in the original file, such as the location where the photo was taken, may not be carried over to the JPG. If you rely on that information, check the result before deleting the original.' },
     ],
-    related: ['heic-to-png', 'webp-to-jpg'],
+    related: ['heic-to-png', 'webp-to-jpg', 'compress-image'],
   },
   {
     slug: 'heic-to-png',
     category: 'image',
+    kind: 'convert',
     name: 'HEIC to PNG',
     h1: 'HEIC to PNG, right in your browser',
     title: 'HEIC to PNG Converter – Free, Private, No Upload',
@@ -124,11 +137,12 @@ export const tools: Tool[] = [
       { q: 'Will converting to PNG improve the quality?', a: 'No. PNG preserves what is in the image at the moment of conversion, but it cannot restore detail that the original HEIC file did not contain.' },
       { q: 'Are my files uploaded?', a: 'No. Everything is converted locally in your browser.' },
     ],
-    related: ['heic-to-jpg', 'webp-to-png'],
+    related: ['heic-to-jpg', 'webp-to-png', 'compress-image'],
   },
   {
     slug: 'webp-to-jpg',
     category: 'image',
+    kind: 'convert',
     name: 'WebP to JPG',
     h1: 'WebP to JPG, instantly',
     title: 'WebP to JPG Converter – Free, Private, No Upload',
@@ -182,11 +196,12 @@ export const tools: Tool[] = [
       { q: 'What happens to an animated WebP?', a: 'It is converted to a still image using the first frame, because JPG cannot store animation.' },
       { q: 'Are my files uploaded?', a: 'No. Everything is converted locally in your browser.' },
     ],
-    related: ['webp-to-png', 'heic-to-jpg'],
+    related: ['webp-to-png', 'heic-to-jpg', 'compress-image'],
   },
   {
     slug: 'webp-to-png',
     category: 'image',
+    kind: 'convert',
     name: 'WebP to PNG',
     h1: 'WebP to PNG, keeping transparency',
     title: 'WebP to PNG Converter – Free, Private, No Upload',
@@ -232,14 +247,83 @@ export const tools: Tool[] = [
       { q: 'What happens to an animated WebP?', a: 'It is converted to a still image using the first frame.' },
       { q: 'Are my files uploaded?', a: 'No. Everything is converted locally in your browser.' },
     ],
-    related: ['webp-to-jpg', 'heic-to-png'],
+    related: ['webp-to-jpg', 'heic-to-png', 'compress-image'],
+  },
+  {
+    slug: 'compress-image',
+    category: 'image',
+    kind: 'compress',
+    name: 'Compress Image',
+    h1: 'Compress images without uploading them',
+    title: 'Compress Images Online – Free, Private, No Upload',
+    description: 'Reduce JPG, PNG and WebP file sizes in your browser. Your images never leave your device. No sign-up, no limits.',
+    intro: 'Make photos and graphics smaller right in your browser. Nothing is uploaded, and there is no sign-up or file limit.',
+    accept: '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp',
+    icon: { from: '5 MB', to: '1 MB', f: 'size' },
+    howTo: [
+      'Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.',
+      'Move the quality slider. Around 75% to 85% usually keeps photos looking the same while making the files much smaller.',
+      'Optionally limit the longest side of the image. Shrinking a very large photo often saves more space than lowering the quality alone.',
+      'Check the before and after sizes, then download each image or use Download all.',
+    ],
+    sections: [
+      {
+        h: "How image compression works",
+        p: [
+          "JPG and WebP are lossy formats. When an image is saved again at a lower quality, the file keeps most of what you can see and drops fine detail that is hard to notice, which makes the file smaller. Reducing the number of pixels shrinks the file even more.",
+        ],
+      },
+      {
+        h: "Choosing quality and size",
+        p: [
+          "These are rules of thumb, not fixed rules. For web pages, email and messaging, a quality of about 70% to 80% and a longest side of 1920 pixels is a common choice. For photos you want to keep, stay at 85% or higher, or keep the original. For small previews, 1024 pixels on the longest side is usually enough.",
+          "Compression cannot bring back detail, so always keep your original files.",
+        ],
+      },
+      {
+        h: "What about PNG?",
+        p: [
+          "PNG is lossless, so saving a PNG again as a PNG saves little unless you also reduce its size. For much smaller files, choose WebP or JPG as the format. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency.",
+        ],
+      },
+      {
+        h: "What is removed",
+        p: [
+          "Information stored inside the original file, such as camera details and the location where a photo was taken, is not copied into the compressed image. That also makes the result safer to share.",
+          "If compressing would make a file larger than the original, the original is kept and marked as already well compressed.",
+        ],
+      },
+      {
+        h: "Very large images on iPhone and iPad",
+        p: [
+          "Safari on iPhone and iPad can only handle images up to roughly 16 megapixels at a time. Larger images, such as some 48 megapixel photos, are reduced slightly in size on those devices so they can be processed.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Are my images uploaded to a server?", a: "No. The compression runs inside your browser tab, so your images never leave your device." },
+      { q: "How much smaller will my files get?", a: "It depends on the image. Large photos often shrink a lot when you lower the quality or the size, while images that are already compressed, such as screenshots and small graphics, change less." },
+      { q: "Will the quality look worse?", a: "At about 75% to 85% the difference is usually hard to notice at normal viewing size, but zooming in can reveal it. Keep your originals and compare the result before replacing anything." },
+      { q: "Why was my file kept the same size?", a: "Some files are already well compressed, and saving them again would make them larger. In that case we keep the original instead of giving you a bigger file." },
+      { q: "Which format is best for the web?", a: "WebP is often smaller than JPG at a similar quality and works in modern browsers. JPG is the safest choice if you need the image to open everywhere." },
+      { q: "Why does my PNG barely shrink?", a: "PNG is a lossless format, so there is little to remove. Choose WebP or JPG as the output format, or reduce the longest side, to make it much smaller." },
+      { q: "Can I compress iPhone HEIC photos?", a: "Not directly on this page. Convert them first with the HEIC to JPG tool, then compress the JPG." },
+    ],
+    related: ['heic-to-jpg', 'webp-to-jpg', 'webp-to-png'],
   },
 ];
 
 export const categories = {
-  image: { label: 'Image', blurb: 'Convert image formats privately, right in your browser.' },
+  image: { label: 'Image', blurb: 'Convert and compress images privately, right in your browser.' },
 } as const;
 
 export const toolPath = (t: Tool) => `/${t.category}/${t.slug}`;
 
 export const bySlug = (slug: string) => tools.find((t) => t.slug === slug)!;
+
+// Icon shown on cards: auto-generated from "a-to-b" slugs unless the tool defines its own.
+export const iconOf = (t: Tool) => {
+  if (t.icon) return t.icon;
+  const [a, b] = t.slug.split('-to-');
+  return { from: a.toUpperCase(), to: b.toUpperCase(), f: b };
+};

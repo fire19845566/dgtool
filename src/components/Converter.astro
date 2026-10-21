@@ -1,6 +1,6 @@
 ---
-import type { Tool } from '../data/tools';
-interface Props { tool: Tool }
+import type { ConvertTool } from '../data/tools';
+interface Props { tool: ConvertTool }
 const { tool } = Astro.props;
 const isJpeg = tool.to === 'image/jpeg';
 ---
