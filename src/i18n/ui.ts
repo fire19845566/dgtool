@@ -149,4 +149,53 @@ const ja: UI = {
   },
 };
 
-export const ui: Record<Lang, UI> = { en, 'zh-tw': zhTw, ja };
+const ko: UI = {
+  site: { name: 'DGTool', homeAria: 'DGTool 홈', logoAlt: 'dgtool.io', about: '사이트 소개', privacy: '개인정보처리방침', terms: '이용약관', language: '언어' },
+  nav: { home: '홈' },
+  home: {
+    title: 'DGTool – 브라우저에서 실행되는 무료 온라인 도구',
+    description: '브라우저에서 실행되는 무료 온라인 도구입니다. 파일은 사용자의 기기 밖으로 나가지 않습니다.',
+    h1: '파일이 기기 밖으로 나가지 않는 무료 도구',
+    lead: '도구를 선택하세요. 파일은 브라우저에서 처리되며 업로드되지 않습니다.',
+  },
+  categories: {
+    image: {
+      title: '이미지 도구',
+      metaTitle: '무료 이미지 도구 – 업로드 없이, 개인정보 보호 | DGTool',
+      blurb: '브라우저에서 이미지를 비공개로 변환하고 압축하세요.',
+    },
+  },
+  content: { howToConvert: '{name}하는 방법', howToCompress: '이미지를 압축하는 방법', faq: '자주 묻는 질문', related: '관련 도구' },
+  common: { download: '다운로드', downloadAll: '모두 다운로드', clear: '목록 지우기', waiting: '대기 중…' },
+  converter: {
+    dropTitle: '파일을 선택하거나 여기에 끌어다 놓으세요',
+    dropSub: '여러 파일을 한 번에 선택할 수 있습니다',
+    jpgQuality: 'JPG 품질',
+    converting: '변환 중…',
+    done: '완료 · {from} → {to}',
+    failed: '이 파일을 변환할 수 없습니다. 올바른 형식의 유효한 이미지인지 확인하세요.',
+  },
+  compressor: {
+    dropTitle: '이미지를 선택하거나 여기에 끌어다 놓으세요',
+    dropSub: 'JPG, PNG, WebP · 여러 장을 한 번에 선택할 수 있습니다',
+    quality: '품질',
+    longestSide: '긴 변 크기',
+    original: '원본 크기',
+    format: '형식',
+    formatSame: '원본과 동일',
+    hint: 'PNG는 색상 수를 줄여 압축하며, 품질 값이 유지할 색상 수를 정합니다. 사진은 WebP나 JPG를 선택하면 파일이 훨씬 작아집니다. JPG는 투명한 영역을 흰색으로 채웁니다.',
+    compressing: '압축 중…',
+    unsupported: '지원하지 않는 파일입니다. JPG, PNG 또는 WebP를 사용하세요.',
+    kept: '이미 충분히 압축됨 · 원본 파일을 유지했습니다({size})',
+    done: '완료 · {before} → {after} ({sign}{pct}%)',
+    failed: '이 파일을 압축할 수 없습니다. 유효한 JPG, PNG 또는 WebP 이미지인지 확인하세요.',
+    summarySavedOne: '이미지 {n}장에서 {saved} 절약 (−{pct}%)',
+    summarySavedMany: '이미지 {n}장에서 {saved} 절약 (−{pct}%)',
+    summaryNone: '이 설정으로는 파일 크기가 줄어들지 않았습니다. 품질을 낮추거나 크기를 줄여 보세요.',
+    noteWebp: '이 브라우저는 WebP로 저장할 수 없어 JPG로 저장했습니다.',
+    detailColors: '{n}색',
+    detailLossless: '{n}색, 눈에 띄는 변화 없음',
+  },
+};
+
+export const ui: Record<Lang, UI> = { en, 'zh-tw': zhTw, ja, ko };

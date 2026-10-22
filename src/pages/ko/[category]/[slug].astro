@@ -1,0 +1,10 @@
+---
+import ToolView from '../../../views/ToolView.astro';
+import { toolData } from '../../../data/tools';
+
+export function getStaticPaths() {
+  return toolData.map((t) => ({ params: { category: t.category, slug: t.slug } }));
+}
+const { slug } = Astro.params;
+---
+<ToolView lang="ko" slug={slug!} />

@@ -1,0 +1,10 @@
+---
+import CategoryView from '../../../views/CategoryView.astro';
+import { categoryKeys } from '../../../data/tools';
+
+export function getStaticPaths() {
+  return categoryKeys.map((category) => ({ params: { category } }));
+}
+const { category } = Astro.params;
+---
+<CategoryView lang="ko" category={category as (typeof categoryKeys)[number]} />
