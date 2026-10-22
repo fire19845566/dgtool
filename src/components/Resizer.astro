@@ -1,0 +1,62 @@
+---
+import type { ResizeTool } from '../data/tools';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+interface Props { tool: ResizeTool; lang: Lang }
+const { tool, lang } = Astro.props;
+const t = ui[lang];
+const strings = { ...t.common, ...t.resizer };
+---
+<div id="resizer" data-i18n={JSON.stringify(strings)}>
+  <label id="drop" for="file">
+    <strong>{t.resizer.dropTitle}</strong>
+    <span>{t.resizer.dropSub}</span>
+  </label>
+  <input id="file" type="file" accept={tool.accept} multiple />
+
+  <div class="opts selects">
+    <label>{t.resizer.mode}
+      <select id="mode" class="sel">
+        <option value="percent">{t.resizer.modePercent}</option>
+        <option value="pixels">{t.resizer.modePixels}</option>
+      </select>
+    </label>
+    <label id="percentBox">{t.resizer.scale}
+      <input id="pct" class="num" type="number" min="1" max="500" value="50" inputmode="numeric" /> %
+    </label>
+    <span id="pixelBox" class="pixels" hidden>
+      <label>{t.resizer.width}
+        <input id="w" class="num" type="number" min="1" max="16384" inputmode="numeric" placeholder="px" />
+      </label>
+      <label>{t.resizer.height}
+        <input id="h" class="num" type="number" min="1" max="16384" inputmode="numeric" placeholder="px" />
+      </label>
+      <label class="check"><input id="ratio" type="checkbox" checked /> {t.resizer.keepRatio}</label>
+    </span>
+  </div>
+  <div class="opts selects">
+    <label>{t.resizer.format}
+      <select id="fmt" class="sel">
+        <option value="same">{t.resizer.formatSame}</option>
+        <option value="jpg">JPG</option>
+        <option value="png">PNG</option>
+        <option value="webp">WebP</option>
+      </select>
+    </label>
+    <label for="q">{t.resizer.quality}</label>
+    <input id="q" type="range" min="40" max="100" value="90" />
+    <span id="qv">90%</span>
+  </div>
+  <p class="hint">{t.resizer.hint}</p>
+
+  <div class="bar" id="bar" hidden>
+    <button class="btn" id="dlAll" type="button">{t.common.downloadAll}</button>
+    <button class="btn ghost" id="clear" type="button">{t.common.clear}</button>
+  </div>
+
+  <ul id="list" aria-live="polite"></ul>
+</div>
+
+<script>
+  import '../scripts/resizer-ui';
+</script>

@@ -7,7 +7,7 @@ const { tool, lang } = Astro.props;
 const t = ui[lang].content;
 ---
 <section class="notes">
-  <h2>{tool.kind === 'compress' ? t.howToCompress : fmt(t.howToConvert, { name: tool.name })}</h2>
+  <h2>{tool.kind === 'compress' ? t.howToCompress : tool.kind === 'resize' ? t.howToResize : fmt(t.howToConvert, { name: tool.name })}</h2>
   <ol class="steps">
     {tool.howTo.map((s) => <li>{s}</li>)}
   </ol>

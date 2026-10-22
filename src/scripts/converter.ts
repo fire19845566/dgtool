@@ -169,3 +169,114 @@ export async function compressImage(file: File, o: CompressOptions): Promise<Com
     d.done();
   }
 }
+
+// ---------------------------------------------------------------------------
+// Image resizing
+// ---------------------------------------------------------------------------
+export interface ResizeOptions {
+  mode: 'percent' | 'pixels';
+  percent: number;          // used when mode is "percent"
+  width: number;            // pixels, 0 = not set
+  height: number;           // pixels, 0 = not set
+  keepRatio: boolean;
+  format: 'same' | 'jpg' | 'png' | 'webp';
+  quality: number;          // 0..1, JPG and WebP only
+}
+export interface ResizeResult {
+  blob: Blob;
+  ext: 'jpg' | 'png' | 'webp';
+  from: { w: number; h: number };
+  to: { w: number; h: number };
+  limited: boolean;
+  noteKey?: 'webpFallback';
+}
+
+const MAX_SIDE = 16384;
+
+// Shrinking in steps of one half gives smoother results than one big jump.
+function scaleTo(d: Decoded, tw: number, th: number, mime: string): HTMLCanvasElement {
+  let cur: CanvasImageSource = d.src;
+  let cw = d.w;
+  let ch = d.h;
+  while (cw / 2 >= tw && ch / 2 >= th) {
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.ceil(cw / 2));
+    c.height = Math.max(1, Math.ceil(ch / 2));
+    const x = c.getContext('2d')!;
+    x.imageSmoothingQuality = 'high';
+    x.drawImage(cur, 0, 0, c.width, c.height);
+    cur = c;
+    cw = c.width;
+    ch = c.height;
+  }
+  const out = document.createElement('canvas');
+  out.width = tw;
+  out.height = th;
+  const ctx = out.getContext('2d')!;
+  if (mime === 'image/jpeg') {            // JPG has no alpha: paint white first
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, tw, th);
+  }
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(cur, 0, 0, tw, th);
+  return out;
+}
+
+const toBlob = (c: HTMLCanvasElement, mime: string, quality: number) =>
+  new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('encode failed'))), mime, quality));
+
+export async function resizeImage(file: File, o: ResizeOptions): Promise<ResizeResult> {
+  const srcMime = guessMime(file);
+  const wanted =
+    o.format === 'jpg' ? 'image/jpeg'
+    : o.format === 'png' ? 'image/png'
+    : o.format === 'webp' ? 'image/webp'
+    : EXT[srcMime] ? srcMime : 'image/jpeg';
+  const d = await decodeNative(file, srcMime);
+  try {
+    if (!d.w || !d.h) throw new Error('empty image');
+
+    let tw: number;
+    let th: number;
+    if (o.mode === 'percent') {
+      const s = Math.max(1, o.percent) / 100;
+      tw = d.w * s;
+      th = d.h * s;
+    } else if (o.keepRatio) {
+      const sw = o.width > 0 ? o.width / d.w : Infinity;
+      const sh = o.height > 0 ? o.height / d.h : Infinity;
+      const s = Math.min(sw, sh);
+      const k = Number.isFinite(s) ? s : 1;
+      tw = d.w * k;
+      th = d.h * k;
+    } else {
+      tw = o.width > 0 ? o.width : d.w;
+      th = o.height > 0 ? o.height : d.h;
+    }
+    tw = Math.max(1, Math.round(tw));
+    th = Math.max(1, Math.round(th));
+
+    // Stay inside what the browser can draw.
+    let limited = false;
+    let k = 1;
+    if (tw * th > MAX_PIXELS) k = Math.min(k, Math.sqrt(MAX_PIXELS / (tw * th)));
+    if (Math.max(tw, th) > MAX_SIDE) k = Math.min(k, MAX_SIDE / Math.max(tw, th));
+    if (k < 1) {
+      tw = Math.max(1, Math.floor(tw * k));
+      th = Math.max(1, Math.floor(th * k));
+      limited = true;
+    }
+
+    let mime = wanted;
+    let noteKey: 'webpFallback' | undefined;
+    let blob = await toBlob(scaleTo(d, tw, th, mime), mime, o.quality);
+    if (blob.type !== mime) {
+      mime = 'image/jpeg';                  // browser cannot save this type (for example WebP in Safari)
+      noteKey = 'webpFallback';
+      blob = await toBlob(scaleTo(d, tw, th, mime), mime, o.quality);
+    }
+    return { blob, ext: EXT[mime], from: { w: d.w, h: d.h }, to: { w: tw, h: th }, limited, noteKey };
+  } finally {
+    d.done();
+  }
+}

@@ -328,5 +328,76 @@ export const en: Record<string, ToolCopy> = {
         "a": "Not directly on this page. Convert them first with the HEIC to JPG tool, then compress the JPG."
       }
     ]
+  },
+  "resize-image": {
+    "name": "Resize Image",
+    "h1": "Resize images without uploading them",
+    "title": "Resize Images Online – Free, Private, No Upload",
+    "description": "Change the size of JPG, PNG and WebP images by percentage or pixels in your browser. Your images never leave your device. No sign-up, no limits.",
+    "intro": "Make images smaller or larger right in your browser. Nothing is uploaded, and there is no sign-up or file limit.",
+    "howTo": [
+      "Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.",
+      "Choose how to resize: by percentage, or by width and height in pixels.",
+      "Leave the aspect ratio option on so the picture is not stretched. Turn it off only if you need an exact width and height.",
+      "Check the new size next to each image, then download it or use Download all."
+    ],
+    "sections": [
+      {
+        "h": "Percentage or pixels?",
+        "p": [
+          "Use a percentage, such as 50%, to shrink every image by the same proportion. Use pixels when a website, form or document asks for a specific width or height. With the aspect ratio kept, the image is scaled to fit inside the width and height you enter, and if you fill in only one of them the other is worked out for you."
+        ]
+      },
+      {
+        "h": "Making images smaller",
+        "p": [
+          "Reducing the number of pixels is one of the most effective ways to shrink a file. A 4000-pixel-wide photo is far larger than needed for most web pages, email and messages. For many uses, a width of 1200 to 2000 pixels is enough. Keep your original files in case you need the full size later."
+        ]
+      },
+      {
+        "h": "Making images larger",
+        "p": [
+          "You can also enlarge an image, but resizing cannot add detail that is not there. Enlarged images usually look soft or blurry, so use this only when you have to meet a minimum size."
+        ]
+      },
+      {
+        "h": "Output format and quality",
+        "p": [
+          "By default the image keeps its original format. You can also save as JPG, PNG or WebP. JPG and WebP are lossy, so the quality slider controls how much detail is kept; PNG is lossless. JPG cannot store transparency, so transparent areas are filled with white."
+        ]
+      },
+      {
+        "h": "What is removed",
+        "p": [
+          "Information stored inside the original file, such as camera details and the location where a photo was taken, is not copied into the resized image. Safari on iPhone and iPad can only handle images up to roughly 16 megapixels, so larger images are reduced to fit that limit."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Are my images uploaded to a server?",
+        "a": "No. Resizing happens inside your browser tab, so your images never leave your device."
+      },
+      {
+        "q": "How do I resize an image to a specific width or height?",
+        "a": "Choose Pixels, then enter the width, the height or both. Leave the aspect ratio option on to avoid stretching the picture."
+      },
+      {
+        "q": "Will resizing reduce the quality?",
+        "a": "Making an image smaller keeps it sharp at its new size, but fine detail is lost because there are fewer pixels. Making it larger cannot add detail and can look soft. Keep your original file."
+      },
+      {
+        "q": "What happens if I turn off the aspect ratio option?",
+        "a": "The image is stretched to exactly the width and height you enter, which can distort it if the proportions are different from the original."
+      },
+      {
+        "q": "Can I resize many images at once?",
+        "a": "Yes. Select several files and they are all resized with the same settings. With a fixed width and the aspect ratio kept, each image gets its own height."
+      },
+      {
+        "q": "Can I resize iPhone HEIC photos?",
+        "a": "Not directly on this page. Convert them first with the HEIC to JPG tool, then resize the JPG."
+      }
+    ]
   }
 };

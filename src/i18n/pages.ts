@@ -22,7 +22,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "What DGTool is",
         "p": [
-          "DGTool is an independent project that builds simple, free tools for everyday tasks. Tools so far include image format conversion, such as turning iPhone HEIC photos into JPG or PNG and WebP images into JPG or PNG, and image compression. More tools are added over time."
+          "DGTool is an independent project that builds simple, free tools for everyday tasks. Tools so far include image format conversion, such as turning iPhone HEIC photos into JPG or PNG and WebP images into JPG or PNG, image compression and resizing. More tools are added over time."
         ]
       },
       {
@@ -193,7 +193,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "什麼是 DGTool",
         "p": [
-          "DGTool 是一個獨立專案，製作簡單、免費的工具，處理日常會遇到的小工作。目前的工具包括圖片格式轉換，例如把 iPhone 的 HEIC 照片轉成 JPG 或 PNG、把 WebP 圖片轉成 JPG 或 PNG，以及圖片壓縮。未來會陸續增加更多工具。"
+          "DGTool 是一個獨立專案，製作簡單、免費的工具，處理日常會遇到的小工作。目前的工具包括圖片格式轉換，例如把 iPhone 的 HEIC 照片轉成 JPG 或 PNG、把 WebP 圖片轉成 JPG 或 PNG，以及圖片壓縮與縮放。未來會陸續增加更多工具。"
         ]
       },
       {
@@ -364,7 +364,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "DGTool とは",
           "p": [
-            "DGTool は、日常のちょっとした作業のための、シンプルで無料のツールを作っている個人プロジェクトです。現在のツールには、iPhone の HEIC 写真を JPG や PNG に変換する、WebP 画像を JPG や PNG に変換するといった画像形式の変換と、画像の圧縮があります。今後もツールを追加していきます。"
+            "DGTool は、日常のちょっとした作業のための、シンプルで無料のツールを作っている個人プロジェクトです。現在のツールには、iPhone の HEIC 写真を JPG や PNG に変換する、WebP 画像を JPG や PNG に変換するといった画像形式の変換と、画像の圧縮、リサイズがあります。今後もツールを追加していきます。"
           ]
         },
         {
@@ -535,7 +535,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "DGTool이란",
           "p": [
-            "DGTool은 일상에서 마주치는 작은 작업을 위한 간단하고 무료인 도구를 만드는 개인 프로젝트입니다. 현재 제공하는 도구에는 iPhone의 HEIC 사진을 JPG나 PNG로 바꾸고 WebP 이미지를 JPG나 PNG로 바꾸는 이미지 형식 변환, 그리고 이미지 압축이 있습니다. 앞으로도 도구를 계속 추가할 예정입니다."
+            "DGTool은 일상에서 마주치는 작은 작업을 위한 간단하고 무료인 도구를 만드는 개인 프로젝트입니다. 현재 제공하는 도구에는 iPhone의 HEIC 사진을 JPG나 PNG로 바꾸고 WebP 이미지를 JPG나 PNG로 바꾸는 이미지 형식 변환, 이미지 압축, 그리고 이미지 크기 조절이 있습니다. 앞으로도 도구를 계속 추가할 예정입니다."
           ]
         },
         {

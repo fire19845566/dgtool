@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Converter from '../components/Converter.astro';
 import Compressor from '../components/Compressor.astro';
+import Resizer from '../components/Resizer.astro';
 import AdSlot from '../components/AdSlot.astro';
 import Faq from '../components/Faq.astro';
 import Content from '../components/Content.astro';
@@ -41,7 +42,7 @@ const related = tool.related.map((s) => getTool(s, lang));
   </p>
   <h1>{tool.h1}</h1>
   <p class="lead">{tool.intro}</p>
-  {tool.kind === 'convert' ? <Converter tool={tool} lang={lang} /> : <Compressor tool={tool} lang={lang} />}
+  {tool.kind === 'convert' ? <Converter tool={tool} lang={lang} /> : tool.kind === 'compress' ? <Compressor tool={tool} lang={lang} /> : <Resizer tool={tool} lang={lang} />}
   <AdSlot />
   <Content tool={tool} lang={lang} />
   <Faq items={tool.faq} lang={lang} />
