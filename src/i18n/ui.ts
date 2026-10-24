@@ -46,6 +46,15 @@ const en = {
     noteWebp: 'This browser cannot save WebP, so the image was saved as JPG.',
     detailColors: '{n} colors',
     detailLossless: '{n} colors, no visible change',
+    modeLabel: 'Compress by',
+    modeQuality: 'Quality',
+    modeTarget: 'Target file size',
+    targetLabel: 'Max size',
+    hintTarget: 'The tool lowers the quality and, if needed, the image size until the file fits your target. PNG files are reduced in colors first.',
+    underTarget: 'Already under {target} · kept the original ({size})',
+    missedTarget: 'Could not reach {target}. Smallest result: {after}',
+    detailQuality: 'quality {q}%',
+    detailResized: 'resized to {w}×{h}',
   },
   resizer: {
     dropTitle: 'Choose images or drop them here',
@@ -68,6 +77,7 @@ const en = {
     noteWebp: 'This browser cannot save WebP, so the image was saved as JPG.',
     noteLimited: 'Reduced to the largest size this browser can handle.',
   },
+  install: { button: 'Install app', iosHelp: 'To install DGTool, tap the Share button, then choose "Add to Home Screen".', close: 'Close' },
 };
 
 export type UI = typeof en;
@@ -118,6 +128,15 @@ const zhTw: UI = {
     noteWebp: '這個瀏覽器無法儲存 WebP，已改存成 JPG。',
     detailColors: '{n} 色',
     detailLossless: '{n} 色，畫面無差異',
+    modeLabel: '壓縮方式',
+    modeQuality: '品質',
+    modeTarget: '指定檔案大小',
+    targetLabel: '大小上限',
+    hintTarget: '工具會降低品質，必要時也會縮小圖片尺寸，直到檔案符合你的目標。PNG 會先減少顏色數量。',
+    underTarget: '已經小於 {target} · 保留原檔（{size}）',
+    missedTarget: '無法達到 {target}。最小的結果：{after}',
+    detailQuality: '品質 {q}%',
+    detailResized: '縮小為 {w}×{h}',
   },
   resizer: {
     dropTitle: '選擇圖片或拖曳到這裡',
@@ -140,6 +159,7 @@ const zhTw: UI = {
     noteWebp: '這個瀏覽器無法儲存 WebP，已改存成 JPG。',
     noteLimited: '已縮小到這個瀏覽器能處理的最大尺寸。',
   },
+  install: { button: '安裝 App', iosHelp: '要安裝 DGTool，請點選「分享」按鈕，再選擇「加入主畫面」。', close: '關閉' },
 };
 
 const ja: UI = {
@@ -188,6 +208,15 @@ const ja: UI = {
     noteWebp: 'このブラウザでは WebP を保存できないため、JPG として保存しました。',
     detailColors: '{n} 色',
     detailLossless: '{n} 色・見た目の変化なし',
+    modeLabel: '圧縮方法',
+    modeQuality: '品質',
+    modeTarget: '目標のファイルサイズ',
+    targetLabel: '上限サイズ',
+    hintTarget: 'ファイルが目標に収まるまで、品質を下げ、必要に応じて画像サイズも小さくします。PNG は先に色数を減らします。',
+    underTarget: 'すでに {target} 以下です · 元のファイルを保持しました（{size}）',
+    missedTarget: '{target} に届きませんでした。最小の結果：{after}',
+    detailQuality: '品質 {q}%',
+    detailResized: '{w}×{h} に縮小',
   },
   resizer: {
     dropTitle: '画像を選択、またはここにドロップ',
@@ -210,6 +239,7 @@ const ja: UI = {
     noteWebp: 'このブラウザでは WebP を保存できないため、JPG として保存しました。',
     noteLimited: 'このブラウザで扱える最大サイズに縮小しました。',
   },
+  install: { button: 'アプリをインストール', iosHelp: 'DGTool をインストールするには、共有ボタンをタップして「ホーム画面に追加」を選んでください。', close: '閉じる' },
 };
 
 const ko: UI = {
@@ -258,6 +288,15 @@ const ko: UI = {
     noteWebp: '이 브라우저는 WebP로 저장할 수 없어 JPG로 저장했습니다.',
     detailColors: '{n}색',
     detailLossless: '{n}색, 눈에 띄는 변화 없음',
+    modeLabel: '압축 방식',
+    modeQuality: '품질',
+    modeTarget: '목표 파일 크기',
+    targetLabel: '최대 크기',
+    hintTarget: '파일이 목표에 맞을 때까지 품질을 낮추고, 필요하면 이미지 크기도 줄입니다. PNG는 먼저 색상 수를 줄입니다.',
+    underTarget: '이미 {target} 이하입니다 · 원본 파일을 유지했습니다({size})',
+    missedTarget: '{target}에 도달하지 못했습니다. 가장 작은 결과: {after}',
+    detailQuality: '품질 {q}%',
+    detailResized: '{w}×{h}(으)로 축소',
   },
   resizer: {
     dropTitle: '이미지를 선택하거나 여기에 끌어다 놓으세요',
@@ -280,6 +319,7 @@ const ko: UI = {
     noteWebp: '이 브라우저는 WebP로 저장할 수 없어 JPG로 저장했습니다.',
     noteLimited: '이 브라우저에서 처리할 수 있는 최대 크기로 줄였습니다.',
   },
+  install: { button: '앱 설치', iosHelp: 'DGTool을 설치하려면 공유 버튼을 누르고 "홈 화면에 추가"를 선택하세요.', close: '닫기' },
 };
 
 export const ui: Record<Lang, UI> = { en, 'zh-tw': zhTw, ja, ko };

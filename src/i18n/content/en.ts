@@ -250,12 +250,13 @@ export const en: Record<string, ToolCopy> = {
   "compress-image": {
     "name": "Compress Image",
     "h1": "Compress images without uploading them",
-    "title": "Compress Images Online – Free, Private, No Upload",
-    "description": "Reduce JPG, PNG and WebP file sizes in your browser. Your images never leave your device. No sign-up, no limits.",
+    "title": "Compress Images to a Target Size – Free, Private, No Upload",
+    "description": "Reduce JPG, PNG and WebP file sizes in your browser, or shrink an image to a specific size such as 100 KB. Your images never leave your device. No sign-up, no limits.",
     "intro": "Make photos and graphics smaller right in your browser. Nothing is uploaded, and there is no sign-up or file limit.",
     "howTo": [
       "Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.",
-      "Move the quality slider. Around 75% to 85% usually keeps photos looking the same while making the files much smaller.",
+      "Choose how to compress. Pick Quality to set it yourself, or Target file size to enter the largest size you need, such as 100 KB.",
+      "With Quality, around 75% to 85% usually keeps photos looking the same while making the files much smaller.",
       "Optionally limit the longest side of the image. Shrinking a very large photo often saves more space than lowering the quality alone.",
       "Check the before and after sizes, then download each image or use Download all."
     ],
@@ -271,6 +272,13 @@ export const en: Record<string, ToolCopy> = {
         "p": [
           "These are rules of thumb, not fixed rules. For web pages, email and messaging, a quality of about 70% to 80% and a longest side of 1920 pixels is a common choice. For photos you want to keep, stay at 85% or higher, or keep the original. For small previews, 1024 pixels on the longest side is usually enough.",
           "Compression cannot bring back detail, so always keep your original files."
+        ]
+      },
+      {
+        "h": "Compressing to a target file size",
+        "p": [
+          "Some websites and forms only accept images under a size limit, such as 100 KB or 2 MB. Choose Target file size and enter the limit. The tool lowers the quality as little as it can to fit, and if that is not enough it also makes the image smaller. PNG files are reduced in colors first.",
+          "If the original is already under your limit, it is kept as it is. If a limit is too small for the image, you get the smallest result that could be made and a note saying the target was not reached."
         ]
       },
       {
@@ -298,6 +306,14 @@ export const en: Record<string, ToolCopy> = {
       {
         "q": "Are my images uploaded to a server?",
         "a": "No. The compression runs inside your browser tab, so your images never leave your device."
+      },
+      {
+        "q": "How do I compress an image to 100 KB?",
+        "a": "Choose Target file size, enter 100 and keep the unit on KB, then add your image. The tool finds the best quality that fits, and makes the image smaller if it has to."
+      },
+      {
+        "q": "Why could the tool not reach my target size?",
+        "a": "Very small limits can be impossible for large or detailed images without making them tiny. In that case the smallest result is kept and shown, so you can decide whether to use a slightly larger limit."
       },
       {
         "q": "How much smaller will my files get?",

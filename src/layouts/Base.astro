@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { ui } from '../i18n/ui';
 import { LANGS, LANG_META, DEFAULT_LANG, localePath, switchPath, type Lang } from '../i18n';
+import { getTools, toolPath, categoryKeys } from '../data/tools';
 interface Props { lang: Lang; title: string; description: string; jsonLd?: object }
 const { lang, title, description, jsonLd } = Astro.props;
 const t = ui[lang];
@@ -9,6 +10,15 @@ const meta = LANG_META[lang];
 const pathname = Astro.url.pathname;
 const canonical = new URL(pathname, Astro.site);
 const ogImage = new URL('/og-image.png', Astro.site);
+// Pages to keep for offline use (see src/scripts/pwa.ts)
+const offlineUrls = [
+  localePath(lang, '/'),
+  ...categoryKeys.map((k) => localePath(lang, `/${k}`)),
+  ...getTools(lang).map((tool) => toolPath(tool, lang)),
+  localePath(lang, '/about'),
+  localePath(lang, '/privacy'),
+  localePath(lang, '/terms'),
+];
 const alternates = LANGS.map((l) => ({ l, href: new URL(switchPath(pathname, lang, l), Astro.site) }));
 ---
 <!doctype html>
@@ -21,6 +31,8 @@ const alternates = LANGS.map((l) => ({ l, href: new URL(switchPath(pathname, lan
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={LANG_META[a.l].html} href={a.href} />)}
     <link rel="alternate" hreflang="x-default" href={alternates.find((a) => a.l === DEFAULT_LANG)!.href} />
+    <link rel="manifest" href={localePath(lang, '/manifest.json')} />
+    <meta name="apple-mobile-web-app-title" content={t.site.name} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#F5F8FC" media="(prefers-color-scheme: light)" />
@@ -54,8 +66,16 @@ const alternates = LANGS.map((l) => ({ l, href: new URL(switchPath(pathname, lan
       </nav>
     </header>
     <main><slot /></main>
-    <footer class="site">
+    <footer class="site" id="pwa" data-config={JSON.stringify({ urls: offlineUrls })}>
       <a href={localePath(lang, '/about')}>{t.site.about}</a> · <a href={localePath(lang, '/privacy')}>{t.site.privacy}</a> · <a href={localePath(lang, '/terms')}>{t.site.terms}</a>
+      <button id="install" class="linklike" type="button" hidden>{t.install.button}</button>
+      <dialog id="iosHelp">
+        <p>{t.install.iosHelp}</p>
+        <form method="dialog"><button class="btn ghost" type="submit">{t.install.close}</button></form>
+      </dialog>
     </footer>
+    <script>
+      import '../scripts/pwa';
+    </script>
   </body>
 </html>

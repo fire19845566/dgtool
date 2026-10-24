@@ -1,4 +1,4 @@
-import { compressImage, type OutFormat } from './converter';
+import { compressImage, compressToTarget, type OutFormat } from './converter';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -6,6 +6,7 @@ const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as 
 const T = JSON.parse($('compressor').dataset.i18n || '{}') as Record<string, string>;
 const f = (s: string, v: Record<string, string | number>) =>
   s.replace(/\{(\w+)\}/g, (_, k) => (k in v ? String(v[k]) : `{${k}}`));
+
 const input = $<HTMLInputElement>('file');
 const drop = $('drop');
 const list = $('list');
@@ -15,6 +16,12 @@ const q = $<HTMLInputElement>('q');
 const qv = $('qv');
 const sizeSel = $<HTMLSelectElement>('size');
 const fmtSel = $<HTMLSelectElement>('fmt');
+const modeSel = $<HTMLSelectElement>('cmode');
+const targetBox = $('targetBox');
+const qualityBox = $('qualityBox');
+const tgt = $<HTMLInputElement>('tgt');
+const unit = $<HTMLSelectElement>('unit');
+const hint = $('hint');
 
 type Item = { file: File; li: HTMLLIElement; ok: boolean; url?: string; name?: string; outSize?: number };
 const items: Item[] = [];
@@ -26,6 +33,10 @@ const SUPPORTED = /\.(jpe?g|png|webp)$/i;
 const TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const fmt = (n: number) =>
   n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+
+const isTarget = () => modeSel.value === 'target';
+const targetBytes = () => Math.max(1, Math.round(Number(tgt.value)) || 200) * Number(unit.value);
+const targetLabel = () => `${Math.max(1, Math.round(Number(tgt.value)) || 200)} ${unit.value === '1024' ? 'KB' : 'MB'}`;
 
 function add(files: FileList | null) {
   if (!files) return;
@@ -75,6 +86,45 @@ async function kick() {
   }
 }
 
+type Outcome = { blob: Blob; ext: string; kept: boolean; text: string; css: string };
+
+// Compress by quality: one pass with the chosen quality.
+async function byQuality(file: File): Promise<Outcome> {
+  const r = await compressImage(file, options());
+  let text: string;
+  if (r.kept) {
+    text = f(T.kept, { size: fmt(file.size) });
+  } else {
+    const pct = Math.round((1 - r.blob.size / file.size) * 100);
+    text = f(T.done, { before: fmt(file.size), after: fmt(r.blob.size), sign: pct >= 0 ? '−' : '+', pct: Math.abs(pct) });
+  }
+  if (r.colors) text += ' · ' + f(r.lossless ? T.detailLossless : T.detailColors, { n: r.colors });
+  if (r.noteKey === 'webpFallback') text += ' · ' + T.noteWebp;
+  const bigger = !r.kept && r.blob.size > file.size;
+  return { blob: r.blob, ext: r.ext, kept: r.kept, text, css: bigger ? 'meta' : 'meta ok' };
+}
+
+// Compress to a target file size: the tool searches for the best fit.
+async function byTarget(file: File): Promise<Outcome> {
+  const o = options();
+  const r = await compressToTarget(file, { targetBytes: targetBytes(), maxSide: o.maxSide, format: o.format });
+  if (r.kept) {
+    return { blob: r.blob, ext: r.ext, kept: true, css: 'meta ok', text: f(T.underTarget, { target: targetLabel(), size: fmt(file.size) }) };
+  }
+  let text: string;
+  if (r.reached) {
+    const pct = Math.round((1 - r.blob.size / file.size) * 100);
+    text = f(T.done, { before: fmt(file.size), after: fmt(r.blob.size), sign: pct >= 0 ? '−' : '+', pct: Math.abs(pct) });
+  } else {
+    text = f(T.missedTarget, { target: targetLabel(), after: fmt(r.blob.size) });
+  }
+  if (r.quality) text += ' · ' + f(T.detailQuality, { q: Math.round(r.quality * 100) });
+  if (r.colors) text += ' · ' + f(T.detailColors, { n: r.colors });
+  if (r.resized) text += ' · ' + f(T.detailResized, { w: r.w, h: r.h });
+  if (r.noteKey === 'webpFallback') text += ' · ' + T.noteWebp;
+  return { blob: r.blob, ext: r.ext, kept: false, css: r.reached ? 'meta ok' : 'meta', text };
+}
+
 async function processItem(it: Item) {
   const meta = it.li.querySelector('.meta') as HTMLElement;
   meta.className = 'meta';
@@ -86,7 +136,7 @@ async function processItem(it: Item) {
     it.li.querySelector('.info')!.appendChild(p);
   }
   try {
-    const r = await compressImage(it.file, options());
+    const r = isTarget() ? await byTarget(it.file) : await byQuality(it.file);
     if (it.url) URL.revokeObjectURL(it.url);
     it.url = URL.createObjectURL(r.blob);
     const base = it.file.name.replace(/\.[^.]+$/, '');
@@ -102,17 +152,8 @@ async function processItem(it: Item) {
       old.replaceWith(th);
     }
 
-    meta.className = 'meta ok';
-    if (r.kept) {
-      meta.textContent = f(T.kept, { size: fmt(it.file.size) });
-    } else {
-      const pct = Math.round((1 - r.blob.size / it.file.size) * 100);
-      const sign = pct >= 0 ? '−' : '+';
-      if (pct < 0) meta.className = 'meta';   // bigger than the original: do not style it as a success
-      meta.textContent = f(T.done, { before: fmt(it.file.size), after: fmt(r.blob.size), sign, pct: Math.abs(pct) });
-    }
-    if (r.colors) meta.textContent += ' · ' + f(r.lossless ? T.detailLossless : T.detailColors, { n: r.colors });
-    if (r.noteKey === 'webpFallback') meta.textContent += ' · ' + T.noteWebp;
+    meta.className = r.css;
+    meta.textContent = r.text;
 
     let a = it.li.querySelector('a.btn') as HTMLAnchorElement | null;
     if (!a) {
@@ -147,14 +188,24 @@ function updateSummary() {
       : T.summaryNone;
 }
 
+function syncMode() {
+  const target = isTarget();
+  targetBox.hidden = !target;
+  qualityBox.hidden = target;
+  hint.textContent = (target ? hint.dataset.target : hint.dataset.quality) || '';
+}
+
 function scheduleRerun() {
   clearTimeout(timer);
-  timer = window.setTimeout(() => { if (items.length) kick(); }, 250);
+  timer = window.setTimeout(() => { if (items.length) kick(); }, 300);
 }
 
 q.addEventListener('input', () => { qv.textContent = q.value + '%'; scheduleRerun(); });
 sizeSel.addEventListener('change', scheduleRerun);
 fmtSel.addEventListener('change', scheduleRerun);
+modeSel.addEventListener('change', () => { syncMode(); scheduleRerun(); });
+tgt.addEventListener('input', scheduleRerun);
+unit.addEventListener('change', scheduleRerun);
 input.addEventListener('change', () => { add(input.files); input.value = ''; });
 ['dragenter', 'dragover'].forEach((e) =>
   drop.addEventListener(e, (ev) => { ev.preventDefault(); drop.classList.add('over'); }));
@@ -174,3 +225,5 @@ $('clear').addEventListener('click', () => {
   items.forEach((i) => i.url && URL.revokeObjectURL(i.url));
   items.length = 0; list.innerHTML = ''; bar.hidden = true; summary.hidden = true;
 });
+
+syncMode();

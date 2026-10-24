@@ -280,3 +280,128 @@ export async function resizeImage(file: File, o: ResizeOptions): Promise<ResizeR
     d.done();
   }
 }
+
+// ---------------------------------------------------------------------------
+// Compress to a target file size
+// ---------------------------------------------------------------------------
+export interface TargetOptions { targetBytes: number; maxSide: number; format: OutFormat }
+export interface TargetResult {
+  blob: Blob;
+  ext: 'jpg' | 'png' | 'webp';
+  kept: boolean;            // the original already fit, so it is returned as is
+  reached: boolean;         // false when even the smallest result is above the target
+  w: number;
+  h: number;
+  resized: boolean;         // the image had to be made smaller to fit
+  quality?: number;         // 0..1, JPG and WebP
+  colors?: number;          // PNG
+  noteKey?: 'webpFallback';
+}
+
+const MIN_QUALITY = 0.4;
+const MAX_QUALITY = 0.92;
+const MIN_SIDE = 32;
+
+export async function compressToTarget(file: File, o: TargetOptions): Promise<TargetResult> {
+  const srcMime = guessMime(file);
+  const wanted =
+    o.format === 'jpg' ? 'image/jpeg' : o.format === 'webp' ? 'image/webp' : EXT[srcMime] ? srcMime : 'image/jpeg';
+
+  // Nothing to do: the original already fits and no change was asked for.
+  if (file.size <= o.targetBytes && wanted === srcMime && o.maxSide === 0) {
+    return { blob: file, ext: EXT[srcMime], kept: true, reached: true, w: 0, h: 0, resized: false };
+  }
+
+  const d = await decodeNative(file, srcMime);
+  try {
+    if (!d.w || !d.h) throw new Error('empty image');
+    let s0 = Math.min(1, Math.sqrt(MAX_PIXELS / (d.w * d.h)));
+    if (o.maxSide > 0) s0 = Math.min(s0, o.maxSide / Math.max(d.w, d.h));
+    const dim = (s: number) => ({ w: Math.max(1, Math.round(d.w * s)), h: Math.max(1, Math.round(d.h * s)) });
+    const target = o.targetBytes;
+    let mime = wanted;
+    let noteKey: 'webpFallback' | undefined;
+
+    let s = s0;
+    let smallest: { blob: Blob; w: number; h: number; quality?: number; colors?: number } | null = null;
+    let best: typeof smallest = null;
+
+    for (let attempt = 0; attempt < 7 && !best; attempt++) {
+      const { w, h } = dim(s);
+      const canvas = scaleTo(d, w, h, mime);
+      let tooBig: Blob;                         // the smallest result at this size, used to estimate the next one
+      let info: { quality?: number; colors?: number } = {};
+
+      if (mime === 'image/png') {
+        // PNG: fewer colors first (256, 128, 64), then a smaller image.
+        const steps = attempt === 0 ? [256, 128, 64] : [128, 64];
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+        const data = ctx.getImageData(0, 0, w, h);
+        let last: Blob | null = null;
+        let lastColors = 64;
+        for (const colors of steps) {
+          const r = await quantizePng(data, colors);
+          const blob = r ? r.blob : await toBlob(canvas, 'image/png', 1);
+          last = blob;
+          lastColors = r ? r.colors : 0;
+          if (blob.size <= target) {
+            best = { blob, w, h, colors: r ? r.colors : undefined };
+            break;
+          }
+          if (!r) break;                        // no palette encoder: scaling is the only lever
+        }
+        if (best) break;
+        tooBig = last!;
+        info = { colors: lastColors || undefined };
+      } else {
+        // JPG and WebP: highest quality that fits, found by bisection.
+        const top = await toBlob(canvas, mime, MAX_QUALITY);
+        if (top.type !== mime) {
+          mime = 'image/jpeg';                  // browser cannot save WebP (for example Safari)
+          noteKey = 'webpFallback';
+          attempt--;                            // redo this size as JPG
+          continue;
+        }
+        if (top.size <= target) { best = { blob: top, w, h, quality: MAX_QUALITY }; break; }
+        const bottom = await toBlob(canvas, mime, MIN_QUALITY);
+        if (bottom.size <= target) {
+          let fit = bottom, fq = MIN_QUALITY, a = MIN_QUALITY, b = MAX_QUALITY;
+          for (let i = 0; i < 6; i++) {
+            const m = (a + b) / 2;
+            const t = await toBlob(canvas, mime, m);
+            if (t.size <= target) { fit = t; fq = m; a = m; } else { b = m; }
+          }
+          best = { blob: fit, w, h, quality: fq };
+          break;
+        }
+        tooBig = bottom;
+        info = { quality: MIN_QUALITY };
+      }
+
+      if (!smallest || tooBig.size < smallest.blob.size) smallest = { blob: tooBig, w, h, ...info };
+      // File size follows the pixel count roughly, so shrink by the square root of the ratio.
+      const k = Math.max(0.5, Math.min(0.95, Math.sqrt(target / tooBig.size) * 0.95));
+      s *= k;
+      const next = dim(s);
+      if (Math.min(next.w, next.h) < MIN_SIDE) break;
+    }
+
+    const reached = !!best;
+    const out = (best ?? smallest)!;
+    const first = dim(s0);
+    return {
+      blob: out.blob,
+      ext: EXT[mime],
+      kept: false,
+      reached,
+      w: out.w,
+      h: out.h,
+      resized: out.w !== first.w || out.h !== first.h,
+      quality: out.quality,
+      colors: out.colors,
+      noteKey,
+    };
+  } finally {
+    d.done();
+  }
+}

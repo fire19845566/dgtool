@@ -36,3 +36,9 @@ Add a language (for example Japanese, `ja`):
 5. Copy the folder `src/pages/zh-tw/` to `src/pages/ja/` and change `lang="zh-tw"` to `lang="ja"` in each file.
 6. `src/styles/global.css`: add a `:lang(ja)` font stack next to `:lang(zh-TW)`.
 Each tool added later needs copy in every language (or it shows in English).
+
+## Installable app (PWA)
+- `src/pages/manifest.json.ts` and `src/pages/<lang>/manifest.json.ts`: one web app manifest per language.
+- `src/pages/sw.js.ts` builds `/sw.js` from `src/pwa/sw-source.ts`. Its version changes on every build, so each deploy replaces the old cache.
+- `src/scripts/pwa.ts` registers the worker, asks it to keep the visitor's language pages for offline use, and shows the "Install app" button.
+- Icons are in `public/icons/`. Ads and other sites are never intercepted by the worker (only same-origin requests).
