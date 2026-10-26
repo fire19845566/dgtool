@@ -405,3 +405,173 @@ export async function compressToTarget(file: File, o: TargetOptions): Promise<Ta
     d.done();
   }
 }
+
+// ---------------------------------------------------------------------------
+// Watermark
+// ---------------------------------------------------------------------------
+export interface WatermarkOptions {
+  type: 'text' | 'image';
+  text: string;
+  fontPct: number;          // text size, % of the image's shorter side
+  color: string;            // '#rrggbb'
+  bold: boolean;
+  outline: boolean;
+  opacity: number;          // 0..1
+  rotation: number;         // degrees
+  layout: 'single' | 'tile';
+  position: string;         // 'tl' 'tc' 'tr' 'ml' 'mc' 'mr' 'bl' 'bc' 'br'
+  gap: number;              // tile spacing, % of the watermark size
+  imageScale: number;       // image watermark width, % of the image width
+  format: 'same' | 'jpg' | 'png' | 'webp';
+  quality: number;          // 0..1, JPG and WebP only
+}
+export type MarkImage = Decoded;
+export interface WatermarkResult {
+  blob: Blob;
+  ext: 'jpg' | 'png' | 'webp';
+  w: number;
+  h: number;
+  limited: boolean;
+  noteKey?: 'webpFallback';
+}
+
+const FONT_STACK =
+  'system-ui, -apple-system, "Segoe UI", "PingFang TC", "Hiragino Sans", "Microsoft JhengHei", "Malgun Gothic", "Noto Sans CJK TC", "Noto Sans CJK JP", "Noto Sans CJK KR", sans-serif';
+
+const brightness = (hex: string) => {
+  const n = parseInt(hex.replace('#', '').padEnd(6, '0').slice(0, 6), 16);
+  return (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+};
+
+// All sizes are percentages of the image, so the preview and the full-size result look the same.
+export function paintWatermark(ctx: CanvasRenderingContext2D, w: number, h: number, o: WatermarkOptions, mark: MarkImage | null) {
+  const side = Math.min(w, h);
+  let uw = 0;
+  let uh = 0;
+  let drawUnit: () => void;
+
+  if (o.type === 'text') {
+    const lines = o.text.split('\n').map((s) => s.trim()).filter(Boolean);
+    if (!lines.length) return;
+    let px = Math.max(6, (o.fontPct / 100) * side);
+    const setFont = () => { ctx.font = `${o.bold ? '700' : '400'} ${px}px ${FONT_STACK}`; };
+    const measure = () => { setFont(); return Math.max(...lines.map((l) => ctx.measureText(l).width)); };
+    uw = measure();
+    if (uw > w * 0.96) { px = (px * w * 0.96) / uw; uw = measure(); }   // long text on a small image
+    const lh = px * 1.25;
+    uh = lh * lines.length;
+    const outline = brightness(o.color) > 0.6 ? '#000' : '#fff';
+    drawUnit = () => {
+      setFont();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      lines.forEach((line, i) => {
+        const y = (i - (lines.length - 1) / 2) * lh;
+        if (o.outline) {
+          ctx.lineWidth = Math.max(1, px * 0.1);
+          ctx.lineJoin = 'round';
+          ctx.strokeStyle = outline;
+          ctx.strokeText(line, 0, y);
+        }
+        ctx.fillStyle = o.color;
+        ctx.fillText(line, 0, y);
+      });
+    };
+  } else {
+    if (!mark || !mark.w || !mark.h) return;
+    uw = Math.max(4, (o.imageScale / 100) * w);
+    uh = (uw * mark.h) / mark.w;
+    if (uh > h * 0.9) { const k = (h * 0.9) / uh; uw *= k; uh *= k; }
+    const m = mark;
+    drawUnit = () => ctx.drawImage(m.src, -uw / 2, -uh / 2, uw, uh);
+  }
+
+  const rad = (o.rotation * Math.PI) / 180;
+  const cos = Math.abs(Math.cos(rad));
+  const sin = Math.abs(Math.sin(rad));
+  const bw = uw * cos + uh * sin;          // size of the rotated watermark
+  const bh = uw * sin + uh * cos;
+
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, Math.min(1, o.opacity));
+  if (o.layout === 'single') {
+    const m = 0.03 * side;
+    const row = o.position[0];
+    const col = o.position[1];
+    const cx = col === 'l' ? m + bw / 2 : col === 'r' ? w - m - bw / 2 : w / 2;
+    const cy = row === 't' ? m + bh / 2 : row === 'b' ? h - m - bh / 2 : h / 2;
+    ctx.translate(cx, cy);
+    ctx.rotate(rad);
+    drawUnit();
+  } else {
+    // A grid that is rotated together with the watermark; every other row is shifted by half a step.
+    let sx = uw * (1 + o.gap / 100);
+    let sy = uh * (1 + o.gap / 100);
+    const reach = Math.hypot(w, h) / 2 + Math.max(sx, sy);
+    const count = (2 * reach / sx) * (2 * reach / sy);
+    if (count > 3000) { const k = Math.sqrt(count / 3000); sx *= k; sy *= k; }
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(rad);
+    const rows = Math.ceil(reach / sy);
+    const cols = Math.ceil(reach / sx);
+    for (let j = -rows; j <= rows; j++) {
+      for (let i = -cols; i <= cols; i++) {
+        ctx.save();
+        ctx.translate(i * sx + (Math.abs(j) % 2 ? sx / 2 : 0), j * sy);
+        drawUnit();
+        ctx.restore();
+      }
+    }
+  }
+  ctx.restore();
+}
+
+export async function loadImage(file: File): Promise<Decoded> {
+  return decodeNative(file, guessMime(file));
+}
+
+// Draws the picture and the watermark. maxW > 0 makes a smaller copy (for the preview).
+export function renderWatermarked(img: Decoded, o: WatermarkOptions, mark: MarkImage | null, maxW = 0, whiteBg = false): HTMLCanvasElement {
+  let scale = Math.min(1, Math.sqrt(MAX_PIXELS / (img.w * img.h)));
+  if (maxW > 0) scale = Math.min(scale, maxW / img.w);
+  const w = Math.max(1, Math.round(img.w * scale));
+  const h = Math.max(1, Math.round(img.h * scale));
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d')!;
+  if (whiteBg) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, w, h);
+  }
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img.src, 0, 0, w, h);
+  paintWatermark(ctx, w, h, o, mark);
+  return c;
+}
+
+export async function watermarkImage(file: File, o: WatermarkOptions, mark: MarkImage | null): Promise<WatermarkResult> {
+  const srcMime = guessMime(file);
+  const wanted =
+    o.format === 'jpg' ? 'image/jpeg'
+    : o.format === 'png' ? 'image/png'
+    : o.format === 'webp' ? 'image/webp'
+    : EXT[srcMime] ? srcMime : 'image/jpeg';
+  const d = await decodeNative(file, srcMime);
+  try {
+    if (!d.w || !d.h) throw new Error('empty image');
+    let mime = wanted;
+    let noteKey: 'webpFallback' | undefined;
+    let c = renderWatermarked(d, o, mark, 0, mime === 'image/jpeg');
+    let blob = await toBlob(c, mime, o.quality);
+    if (blob.type !== mime) {
+      mime = 'image/jpeg';                  // browser cannot save this type (for example WebP in Safari)
+      noteKey = 'webpFallback';
+      c = renderWatermarked(d, o, mark, 0, true);
+      blob = await toBlob(c, mime, o.quality);
+    }
+    return { blob, ext: EXT[mime], w: c.width, h: c.height, limited: c.width !== d.w || c.height !== d.h, noteKey };
+  } finally {
+    d.done();
+  }
+}

@@ -415,5 +415,82 @@ export const en: Record<string, ToolCopy> = {
         "a": "Not directly on this page. Convert them first with the HEIC to JPG tool, then resize the JPG."
       }
     ]
+  },
+  "watermark-image": {
+    "name": "Add Watermark",
+    "h1": "Add a watermark to images without uploading them",
+    "title": "Add a Watermark to Photos Online – Free, Private, No Upload",
+    "description": "Add a text or logo watermark to JPG, PNG and WebP images in your browser, in one place or repeated across the whole image. Your images never leave your device. No sign-up, no limits.",
+    "intro": "Put your name, a notice or your logo on images right in your browser. Nothing is uploaded, and there is no sign-up or file limit.",
+    "howTo": [
+      "Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.",
+      "Choose Text or Image. For text, type your watermark; for an image, choose a PNG with a transparent background, such as a logo.",
+      "Choose the layout: one watermark in a corner or the center, or a pattern repeated across the whole image.",
+      "Adjust the size, opacity and rotation while you watch the preview.",
+      "Check the results in the list, then download each image or use Download all."
+    ],
+    "sections": [
+      {
+        "h": "Text or image watermark",
+        "p": [
+          "A text watermark is quick to make and is good for names, dates and short notices such as \"Copyright\". An image watermark lets you use your logo. A PNG or WebP file with a transparent background works best, because only the logo itself is drawn on top of your picture."
+        ]
+      },
+      {
+        "h": "Marking copies of documents",
+        "p": [
+          "If you share a photo of an ID card, contract or other document, a repeated watermark that names the purpose, for example \"For rental application only\", makes it harder to reuse the copy for something else. Choose the repeat layout, tilt it a little, and keep the opacity low enough that the document stays readable."
+        ]
+      },
+      {
+        "h": "Position, size and opacity",
+        "p": [
+          "For photos you publish, a small semi-transparent watermark in a corner is usually enough. For images that need more protection, make the watermark larger or repeat it over the whole picture. Text with an outline stays readable on both light and dark backgrounds."
+        ]
+      },
+      {
+        "h": "Output format and quality",
+        "p": [
+          "By default each image keeps its original format. You can also save as JPG, PNG or WebP. JPG and WebP are lossy, so the quality slider controls how much detail is kept. JPG cannot store transparency, so transparent areas are filled with white."
+        ]
+      },
+      {
+        "h": "What a watermark can and cannot do",
+        "p": [
+          "A watermark makes an image harder to reuse, but it does not make misuse impossible. Someone with editing skills can crop or paint over a watermark, so do not rely on it alone for sensitive images.",
+          "Text is drawn with the fonts on your device, so its look can differ slightly between a phone and a computer. Information stored inside the original file, such as camera details and the location of a photo, is not copied into the new image."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Are my images uploaded to a server?",
+        "a": "No. The watermark is added inside your browser tab, so your images never leave your device."
+      },
+      {
+        "q": "How do I add a watermark to many photos at once?",
+        "a": "Select all the photos together. They all get the same watermark settings, and you can download them one by one or with Download all."
+      },
+      {
+        "q": "How do I cover the whole image with a repeating watermark?",
+        "a": "Choose the layout that repeats across the image. You can change the spacing and the rotation; a slight tilt such as −30° is common."
+      },
+      {
+        "q": "Can a watermark be removed?",
+        "a": "Anyone with editing skills may be able to hide or remove it, especially a small one in a corner. A large or repeated watermark is harder to remove, but nothing is guaranteed."
+      },
+      {
+        "q": "Can I use Chinese, Japanese or Korean text?",
+        "a": "Yes. The text is drawn with your device's fonts, so any language your device can show will work. The exact typeface depends on the device."
+      },
+      {
+        "q": "Can I use my logo as a watermark?",
+        "a": "Yes. Choose Image and select your logo. A PNG or WebP with a transparent background gives the cleanest result."
+      },
+      {
+        "q": "Can I add a watermark to iPhone HEIC photos?",
+        "a": "Not directly on this page. Convert them first with the HEIC to JPG tool, then add the watermark to the JPG."
+      }
+    ]
   }
 };

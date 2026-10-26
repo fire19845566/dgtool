@@ -97,6 +97,22 @@ h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;margin:0 0 12px;font-weig
 .pixels{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .pixels[hidden],#percentBox[hidden],#targetBox[hidden],#qualityBox[hidden]{display:none}
 .check{display:flex;align-items:center;gap:6px}
+/* watermark tool */
+#previewWrap{margin:16px 0}
+#previewWrap[hidden],.wbox[hidden],#posBox[hidden],#gapBox[hidden]{display:none}
+#preview{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:repeating-conic-gradient(var(--line) 0 25%,var(--surface) 0 50%) 0 0/16px 16px}
+.wbox{margin:0 0 6px}
+.txt{display:block;width:100%;margin:6px 0 4px;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+.color{width:44px;height:32px;padding:0;margin-left:8px;vertical-align:middle;border:1px solid var(--line);border-radius:6px;background:none;cursor:pointer}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.posbox{border:0;padding:0;margin:0 0 12px}
+.posbox legend{font-weight:500;margin-bottom:6px;padding:0}
+.posgrid{display:inline-grid;grid-template-columns:repeat(3,40px);gap:4px}
+.posgrid label{position:relative}
+.posgrid input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.posgrid span{display:flex;align-items:center;justify-content:center;height:40px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--muted)}
+.posgrid input:checked + span{border-color:var(--blue);color:var(--on-brand);background:var(--grad)}
+.posgrid input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
 .hint{color:var(--muted);font-size:.875rem;margin:-6px 0 14px;max-width:60ch}
 .summary{color:var(--ok);font-weight:500;margin:10px 0 0}
 .summary[hidden]{display:none}
