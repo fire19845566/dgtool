@@ -99,9 +99,12 @@ h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;margin:0 0 12px;font-weig
 .check{display:flex;align-items:center;gap:6px}
 /* watermark tool */
 #previewWrap{margin:16px 0}
-#previewWrap[hidden],.wbox[hidden],#posBox[hidden],#gapBox[hidden]{display:none}
+#previewWrap[hidden],.wbox[hidden],#posBox[hidden],#gapBox[hidden],#warn[hidden],#jpgHint[hidden],#fill[hidden]{display:none}
 #preview{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:repeating-conic-gradient(var(--line) 0 25%,var(--surface) 0 50%) 0 0/16px 16px}
 .wbox{margin:0 0 6px}
+#bgremover #preview{cursor:crosshair}
+.swatch{display:inline-block;width:28px;height:28px;border-radius:6px;border:1px solid var(--line)}
+.btn.small{padding:5px 12px;font-size:.85rem}
 .txt{display:block;width:100%;margin:6px 0 4px;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
 .color{width:44px;height:32px;padding:0;margin-left:8px;vertical-align:middle;border:1px solid var(--line);border-radius:6px;background:none;cursor:pointer}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

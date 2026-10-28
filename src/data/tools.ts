@@ -31,7 +31,11 @@ export interface WatermarkData extends ToolBase {
   kind: 'watermark';
 }
 
-export type ToolData = ConvertData | CompressData | ResizeData | WatermarkData;
+export interface RemoveBgData extends ToolBase {
+  kind: 'removebg';
+}
+
+export type ToolData = ConvertData | CompressData | ResizeData | WatermarkData | RemoveBgData;
 
 export interface ToolCopy {
   name: string;
@@ -48,7 +52,8 @@ export type ConvertTool = ConvertData & ToolCopy;
 export type CompressTool = CompressData & ToolCopy;
 export type ResizeTool = ResizeData & ToolCopy;
 export type WatermarkTool = WatermarkData & ToolCopy;
-export type Tool = ConvertTool | CompressTool | ResizeTool | WatermarkTool;
+export type RemoveBgTool = RemoveBgData & ToolCopy;
+export type Tool = ConvertTool | CompressTool | ResizeTool | WatermarkTool | RemoveBgTool;
 
 export const toolData: ToolData[] = [
   { slug: 'heic-to-jpg', category: 'image', kind: 'convert', accept: '.heic,.heif,image/heic,image/heif', fromExt: /\.(heic|heif)$/i, to: 'image/jpeg', toExt: 'jpg', engine: 'heic', related: ['heic-to-png', 'webp-to-jpg', 'compress-image'] },
@@ -57,7 +62,8 @@ export const toolData: ToolData[] = [
   { slug: 'webp-to-png', category: 'image', kind: 'convert', accept: '.webp,image/webp', fromExt: /\.webp$/i, to: 'image/png', toExt: 'png', engine: 'canvas', related: ['webp-to-jpg', 'heic-to-png', 'compress-image'] },
   { slug: 'compress-image', category: 'image', kind: 'compress', accept: '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp', icon: {'from': '5 MB', 'to': '1 MB', 'f': 'size'}, related: ['heic-to-jpg', 'webp-to-jpg', 'webp-to-png', 'resize-image'] },
   { slug: 'resize-image', category: 'image', kind: 'resize', accept: '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp', icon: { from: '4000 px', to: '800 px', f: 'size' }, related: ['compress-image', 'heic-to-jpg', 'webp-to-jpg', 'watermark-image'] },
-  { slug: 'watermark-image', category: 'image', kind: 'watermark', accept: '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp', icon: { from: 'IMG', to: '© IMG', f: 'size' }, related: ['resize-image', 'compress-image', 'heic-to-jpg'] },
+  { slug: 'watermark-image', category: 'image', kind: 'watermark', accept: '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp', icon: { from: 'IMG', to: '© IMG', f: 'size' }, related: ['resize-image', 'compress-image', 'heic-to-jpg', 'remove-background'] },
+  { slug: 'remove-background', category: 'image', kind: 'removebg', accept: '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp', icon: { from: 'IMG', to: 'PNG', f: 'png' }, related: ['watermark-image', 'resize-image', 'compress-image'] },
 ];
 
 export const categoryKeys = ['image'] as const;

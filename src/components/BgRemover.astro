@@ -1,0 +1,82 @@
+---
+import type { RemoveBgTool } from '../data/tools';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+interface Props { tool: RemoveBgTool; lang: Lang }
+const { tool, lang } = Astro.props;
+const t = ui[lang];
+const r = t.removeBg;
+const strings = { ...t.common, ...r };
+---
+<div id="bgremover" data-i18n={JSON.stringify(strings)}>
+  <label id="drop" for="file">
+    <strong>{r.dropTitle}</strong>
+    <span>{r.dropSub}</span>
+  </label>
+  <input id="file" type="file" accept={tool.accept} multiple />
+
+  <div id="previewWrap" hidden>
+    <canvas id="preview" role="img" aria-label={r.previewAlt}></canvas>
+    <p class="hint" id="pickHelp">{r.previewHelp}</p>
+    <div class="opts selects">
+      <span class="meta">{r.bgColor}</span>
+      <span id="swatch" class="swatch" aria-hidden="true"></span>
+      <span id="hex" class="meta"></span>
+      <button id="autoBtn" class="btn ghost small" type="button">{r.auto}</button>
+    </div>
+    <p id="warn" class="meta err" hidden>{r.hintComplex}</p>
+  </div>
+
+  <div class="opts">
+    <label for="tol">{r.tolerance}</label>
+    <input id="tol" type="range" min="0" max="100" value="30" />
+    <span id="tolv">30</span>
+  </div>
+  <div class="opts">
+    <label for="soft">{r.softness}</label>
+    <input id="soft" type="range" min="0" max="3" value="1" />
+    <span id="softv">1</span>
+  </div>
+  <div class="opts">
+    <label for="trim">{r.trim}</label>
+    <input id="trim" type="range" min="0" max="5" value="0" />
+    <span id="trimv">0</span>
+  </div>
+  <div class="opts selects">
+    <label class="check"><input id="edges" type="checkbox" checked /> {r.edgesOnly}</label>
+  </div>
+
+  <div class="opts selects">
+    <label>{r.output}
+      <select id="bgmode" class="sel">
+        <option value="transparent">{r.outTransparent}</option>
+        <option value="color">{r.outColor}</option>
+      </select>
+    </label>
+    <input id="fill" class="color" type="color" value="#ffffff" hidden />
+    <label>{r.format}
+      <select id="fmt" class="sel">
+        <option value="png">PNG</option>
+        <option value="webp">WebP</option>
+        <option value="jpg">JPG</option>
+      </select>
+    </label>
+  </div>
+  <div class="opts" id="qualityBox" hidden>
+    <label for="q">{r.quality}</label>
+    <input id="q" type="range" min="40" max="100" value="92" />
+    <span id="qv">92%</span>
+  </div>
+  <p class="hint" id="jpgHint" hidden>{r.hintJpg}</p>
+
+  <div class="bar" id="bar" hidden>
+    <button class="btn" id="dlAll" type="button">{t.common.downloadAll}</button>
+    <button class="btn ghost" id="clear" type="button">{t.common.clear}</button>
+  </div>
+
+  <ul id="list" aria-live="polite"></ul>
+</div>
+
+<script>
+  import '../scripts/removebg-ui';
+</script>

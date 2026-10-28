@@ -1,5 +1,6 @@
 // Browser-only conversion. Each engine takes a File and returns a Blob.
 import { quantizePng } from './png-quant';
+import { detectBackground, removeBackground, type BgOptions, type RGB } from './bgremove';
 export type Engine = 'heic' | 'canvas';
 
 // iOS and iPadOS Safari limit canvas size to roughly 16.7 million pixels.
@@ -571,6 +572,83 @@ export async function watermarkImage(file: File, o: WatermarkOptions, mark: Mark
       blob = await toBlob(c, mime, o.quality);
     }
     return { blob, ext: EXT[mime], w: c.width, h: c.height, limited: c.width !== d.w || c.height !== d.h, noteKey };
+  } finally {
+    d.done();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Background removal (by color)
+// ---------------------------------------------------------------------------
+export interface RemoveBgOptions extends BgOptions {
+  manualColor: RGB | null;          // picked by the user; null = detect from the edges
+  background: 'transparent' | 'color';
+  fillColor: string;                // '#rrggbb', used when background is "color"
+  format: 'png' | 'webp' | 'jpg';
+  quality: number;
+}
+export interface RemoveBgResult {
+  blob: Blob;
+  ext: 'jpg' | 'png' | 'webp';
+  w: number;
+  h: number;
+  limited: boolean;
+  color: RGB;
+  share: number;
+  noteKey?: 'webpFallback';
+}
+
+// Draws the picture (at most maxW wide when maxW > 0) and removes its background.
+export function cutOut(img: Decoded, o: RemoveBgOptions, maxW = 0) {
+  let scale = Math.min(1, Math.sqrt(MAX_PIXELS / (img.w * img.h)));
+  if (maxW > 0) scale = Math.min(scale, maxW / img.w);
+  const w = Math.max(1, Math.round(img.w * scale));
+  const h = Math.max(1, Math.round(img.h * scale));
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true })!;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img.src, 0, 0, w, h);
+  const data = ctx.getImageData(0, 0, w, h);
+  const detected = detectBackground(data);
+  const color = o.manualColor ?? detected.color;
+  // "Trim" is in pixels of the full-size image: scale it for the smaller preview.
+  const trim = Math.round(o.trim * scale);
+  removeBackground(data, { ...o, color, trim });
+  ctx.putImageData(data, 0, 0);
+  return { canvas: c, color, share: detected.share, scale };
+}
+
+// Puts the cut-out on a solid color when asked, otherwise keeps it transparent.
+export function composeBg(cut: HTMLCanvasElement, o: RemoveBgOptions, forceFill: boolean): HTMLCanvasElement {
+  if (o.background !== 'color' && !forceFill) return cut;
+  const out = document.createElement('canvas');
+  out.width = cut.width;
+  out.height = cut.height;
+  const ctx = out.getContext('2d')!;
+  ctx.fillStyle = o.background === 'color' ? o.fillColor : '#ffffff';
+  ctx.fillRect(0, 0, out.width, out.height);
+  ctx.drawImage(cut, 0, 0);
+  return out;
+}
+
+export async function removeBgFromFile(file: File, o: RemoveBgOptions): Promise<RemoveBgResult> {
+  const d = await decodeNative(file, guessMime(file));
+  try {
+    if (!d.w || !d.h) throw new Error('empty image');
+    const { canvas: cut, color, share } = cutOut(d, o, 0);
+    let mime = o.format === 'jpg' ? 'image/jpeg' : o.format === 'webp' ? 'image/webp' : 'image/png';
+    let noteKey: 'webpFallback' | undefined;
+    let out = composeBg(cut, o, mime === 'image/jpeg');
+    let blob = await toBlob(out, mime, o.quality);
+    if (blob.type !== mime) {
+      mime = 'image/png';                   // browser cannot save this type (for example WebP in Safari)
+      noteKey = 'webpFallback';
+      out = composeBg(cut, o, false);
+      blob = await toBlob(out, mime, 1);
+    }
+    return { blob, ext: EXT[mime], w: out.width, h: out.height, limited: out.width !== d.w || out.height !== d.h, color, share, noteKey };
   } finally {
     d.done();
   }

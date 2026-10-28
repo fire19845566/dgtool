@@ -40,6 +40,7 @@ type Item = { file: File; li: HTMLLIElement; ok: boolean; url?: string; name?: s
 const items: Item[] = [];
 let mark: MarkImage | null = null;
 let previewImg: Awaited<ReturnType<typeof loadImage>> | null = null;
+let previewLoading = false;
 let running = false;
 let again = false;
 let runTimer = 0;
@@ -94,8 +95,12 @@ function add(files: FileList | null) {
       meta.className = 'meta err';
       meta.textContent = T.unsupported;
       li.querySelector('.prog')?.remove();
-    } else if (!previewImg) {
-      loadImage(file).then((img) => { previewImg = img; drawPreview(); }).catch(() => { /* the list shows the error */ });
+    } else if (!previewImg && !previewLoading) {
+      previewLoading = true;                      // only the first picture becomes the preview
+      loadImage(file)
+        .then((img) => { previewImg = img; drawPreview(); })
+        .catch(() => { /* the list shows the error */ })
+        .finally(() => { previewLoading = false; });
     }
     items.push({ file, li, ok });
   }

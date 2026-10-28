@@ -492,5 +492,82 @@ export const en: Record<string, ToolCopy> = {
         "a": "Not directly on this page. Convert them first with the HEIC to JPG tool, then add the watermark to the JPG."
       }
     ]
+  },
+  "remove-background": {
+    "name": "Remove Background",
+    "h1": "Remove the background from images without uploading them",
+    "title": "Remove Image Background Online – Free, Private, No Upload",
+    "description": "Make a plain white or single-color background transparent in your browser. Your images never leave your device. No sign-up, no limits.",
+    "intro": "Turn a plain background transparent, or swap it for another color, right in your browser. Nothing is uploaded, and there is no sign-up or file limit.",
+    "howTo": [
+      "Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.",
+      "The tool picks the background color from the edges of the picture. If it picked the wrong one, click the picture where the background is.",
+      "Adjust Tolerance until all of the background is gone but the subject is intact.",
+      "Use Edge softness and Trim edges to clean up the outline. Choose Transparent or a Solid color for what replaces the background.",
+      "Check the results in the list, then download each image or use Download all."
+    ],
+    "sections": [
+      {
+        "h": "How this tool works",
+        "p": [
+          "This tool removes a background by its color. It finds pixels that look like the background color and makes them transparent, with a soft edge so the outline does not look cut out with scissors. It does not use artificial intelligence, so it works best when the background is one plain color."
+        ]
+      },
+      {
+        "h": "What works well",
+        "p": [
+          "Product photos on a white background, signatures and stamps on paper, logos, scans, drawings and ID photos taken against a plain wall usually give clean results. A background that is clearly different in color from the subject is the key."
+        ]
+      },
+      {
+        "h": "What does not work well",
+        "p": [
+          "Busy backgrounds such as streets, rooms or crowds cannot be removed by color. The same goes for photos where the subject has almost the same color as the background, and for soft shadows, which keep a little of the background color. Hair and fur against a plain wall can look rough at the edges.",
+          "If your photo has a complicated background, a tool that uses artificial intelligence will do a better job than this one."
+        ]
+      },
+      {
+        "h": "Tolerance, edge softness and trim",
+        "p": [
+          "Tolerance sets how different from the background color a pixel can be and still be removed. Raise it for a background with shading, and lower it if parts of the subject disappear. Edge softness blends the outline over a few pixels. Trim edges cuts away a thin line of leftover background around the subject. The option to remove only background that touches the edges keeps same-colored areas inside the subject, such as a white shirt or the hole of a ring."
+        ]
+      },
+      {
+        "h": "Transparent or a new color",
+        "p": [
+          "Transparent results are best saved as PNG or WebP. To replace the background with another color, for example white or blue for an ID photo, choose Solid color and pick the color. JPG cannot store transparency, so with JPG the removed area becomes the chosen color, or white if you chose Transparent."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Are my images uploaded to a server?",
+        "a": "No. The background is removed inside your browser tab, so your images never leave your device."
+      },
+      {
+        "q": "Does this use artificial intelligence?",
+        "a": "No. It removes pixels that match a background color you can see and adjust. That makes it fast and private, but it cannot tell a person from a street scene."
+      },
+      {
+        "q": "Why did part of my subject disappear?",
+        "a": "Part of the subject is probably close to the background color. Lower Tolerance, and keep the option to remove only background touching the edges turned on."
+      },
+      {
+        "q": "Why is there still a light outline around the subject?",
+        "a": "Raise Edge softness, or use Trim edges to cut away a thin line around the subject. Increasing Tolerance a little can also help."
+      },
+      {
+        "q": "Can I remove a complicated background such as a street or a room?",
+        "a": "Not with this tool. It only removes backgrounds that are mostly one color. For complicated backgrounds, you need a tool that uses artificial intelligence."
+      },
+      {
+        "q": "Can I change the background of an ID photo to white or blue?",
+        "a": "Yes, if the original background is plain. Choose Solid color, pick the color you need, and save the result as JPG or PNG."
+      },
+      {
+        "q": "Can I remove the background from iPhone HEIC photos?",
+        "a": "Not directly on this page. Convert them first with the HEIC to JPG tool, then remove the background from the JPG."
+      }
+    ]
   }
 };
