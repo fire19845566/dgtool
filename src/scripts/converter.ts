@@ -1,6 +1,7 @@
 // Browser-only conversion. Each engine takes a File and returns a Blob.
 import { quantizePng } from './png-quant';
 import { detectBackground, removeBackground, type BgOptions, type RGB } from './bgremove';
+import { applyMask, maskFor, type AiStatus } from './ai-bg';
 export type Engine = 'heic' | 'canvas';
 
 // iOS and iPadOS Safari limit canvas size to roughly 16.7 million pixels.
@@ -581,6 +582,7 @@ export async function watermarkImage(file: File, o: WatermarkOptions, mark: Mark
 // Background removal (by color)
 // ---------------------------------------------------------------------------
 export interface RemoveBgOptions extends BgOptions {
+  method: 'color' | 'ai';
   manualColor: RGB | null;          // picked by the user; null = detect from the edges
   background: 'transparent' | 'color';
   fillColor: string;                // '#rrggbb', used when background is "color"
@@ -599,7 +601,7 @@ export interface RemoveBgResult {
 }
 
 // Draws the picture (at most maxW wide when maxW > 0) and removes its background.
-export function cutOut(img: Decoded, o: RemoveBgOptions, maxW = 0) {
+export async function cutOut(img: Decoded, key: object, o: RemoveBgOptions, maxW = 0, onStatus?: (s: AiStatus) => void) {
   let scale = Math.min(1, Math.sqrt(MAX_PIXELS / (img.w * img.h)));
   if (maxW > 0) scale = Math.min(scale, maxW / img.w);
   const w = Math.max(1, Math.round(img.w * scale));
@@ -611,6 +613,12 @@ export function cutOut(img: Decoded, o: RemoveBgOptions, maxW = 0) {
   ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(img.src, 0, 0, w, h);
   const data = ctx.getImageData(0, 0, w, h);
+  if (o.method === 'ai') {
+    const mask = await maskFor(key, img.src, onStatus);
+    applyMask(data, mask);
+    ctx.putImageData(data, 0, 0);
+    return { canvas: c, color: [0, 0, 0] as RGB, share: 1, scale };
+  }
   const detected = detectBackground(data);
   const color = o.manualColor ?? detected.color;
   // "Trim" is in pixels of the full-size image: scale it for the smaller preview.
@@ -633,11 +641,11 @@ export function composeBg(cut: HTMLCanvasElement, o: RemoveBgOptions, forceFill:
   return out;
 }
 
-export async function removeBgFromFile(file: File, o: RemoveBgOptions): Promise<RemoveBgResult> {
+export async function removeBgFromFile(file: File, o: RemoveBgOptions, onStatus?: (s: AiStatus) => void): Promise<RemoveBgResult> {
   const d = await decodeNative(file, guessMime(file));
   try {
     if (!d.w || !d.h) throw new Error('empty image');
-    const { canvas: cut, color, share } = cutOut(d, o, 0);
+    const { canvas: cut, color, share } = await cutOut(d, file, o, 0, onStatus);
     let mime = o.format === 'jpg' ? 'image/jpeg' : o.format === 'webp' ? 'image/webp' : 'image/png';
     let noteKey: 'webpFallback' | undefined;
     let out = composeBg(cut, o, mime === 'image/jpeg');

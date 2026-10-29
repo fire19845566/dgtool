@@ -1,4 +1,5 @@
 import { loadImage, cutOut, composeBg, removeBgFromFile, type RemoveBgOptions } from './converter';
+import type { AiStatus } from './ai-bg';
 import type { RGB } from './bgremove';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -28,11 +29,17 @@ const fmtSel = $<HTMLSelectElement>('fmt');
 const q = $<HTMLInputElement>('q');
 const qualityBox = $('qualityBox');
 const jpgHint = $('jpgHint');
+const methodSel = $<HTMLSelectElement>('method');
+const aiHint = $('aiHint');
+const aiStatus = $('aiStatus');
+const credit = $('credit');
 
 type Item = { file: File; li: HTMLLIElement; ok: boolean; url?: string; name?: string };
 const items: Item[] = [];
 let manualColor: RGB | null = null;
 let previewImg: Awaited<ReturnType<typeof loadImage>> | null = null;
+let previewFile: File | null = null;
+let previewSeq = 0;                                   // ignores previews that finish after a newer one started
 let origCanvas: HTMLCanvasElement | null = null;      // the preview picture before removal, for picking colors
 let previewLoading = false;
 let running = false;
@@ -47,6 +54,7 @@ const fmt = (n: number) =>
 
 function options(): RemoveBgOptions {
   return {
+    method: methodSel.value as 'color' | 'ai',
     color: [255, 255, 255],
     manualColor,
     tolerance: Number(tol.value),
@@ -62,10 +70,36 @@ function options(): RemoveBgOptions {
 
 const toHex = (c: RGB) => '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('');
 
-function drawPreview() {
-  if (!previewImg) { previewWrap.hidden = true; return; }
+const isAi = () => methodSel.value === 'ai';
+
+function showStatus(s: AiStatus) {
+  aiStatus.className = 'meta';
+  aiStatus.textContent = s === 'downloading' ? T.aiLoading : T.aiStarting;
+  aiStatus.hidden = false;
+}
+function clearStatus() { aiStatus.hidden = true; aiStatus.textContent = ''; }
+function failAi() {
+  aiStatus.className = 'meta err';
+  aiStatus.textContent = T.aiFailed;
+  aiStatus.hidden = false;
+}
+
+async function drawPreview() {
+  if (!previewImg || !previewFile) { previewWrap.hidden = true; return; }
+  const seq = ++previewSeq;
+  const img = previewImg;
   const o = options();
-  const { canvas: cut, color, share } = cutOut(previewImg, o, 900);
+  let res;
+  try {
+    res = await cutOut(img, previewFile, o, 900, showStatus);
+  } catch (err) {
+    console.error('AI preview failed:', err);
+    if (seq === previewSeq) failAi();
+    return;
+  }
+  if (seq !== previewSeq || img !== previewImg) return;   // a newer preview or a cleared page took over
+  if (o.method === 'ai') clearStatus();
+  const { canvas: cut, color, share } = res;
   const shown = composeBg(cut, o, false);              // shows the chosen color when "Solid color" is on
   preview.width = shown.width;
   preview.height = shown.height;
@@ -75,10 +109,10 @@ function drawPreview() {
   origCanvas.width = shown.width;
   origCanvas.height = shown.height;
   const oc = origCanvas.getContext('2d', { willReadFrequently: true })!;
-  oc.drawImage(previewImg.src, 0, 0, shown.width, shown.height);
+  oc.drawImage(img.src, 0, 0, shown.width, shown.height);
   swatch.style.background = `rgb(${color[0]},${color[1]},${color[2]})`;
   hex.textContent = toHex(color);
-  warn.hidden = !(manualColor === null && share < 0.6);
+  warn.hidden = !(o.method === 'color' && manualColor === null && share < 0.6);
   previewWrap.hidden = false;
 }
 
@@ -111,7 +145,7 @@ function add(files: FileList | null) {
     } else if (!previewImg && !previewLoading) {
       previewLoading = true;                      // only the first picture becomes the preview
       loadImage(file)
-        .then((img) => { previewImg = img; drawPreview(); })
+        .then((img) => { previewImg = img; previewFile = file; drawPreview(); })
         .catch(() => { /* the list shows the error */ })
         .finally(() => { previewLoading = false; });
     }
@@ -149,7 +183,8 @@ async function processItem(it: Item) {
     it.li.querySelector('.info')!.appendChild(p);
   }
   try {
-    const r = await removeBgFromFile(it.file, options());
+    const r = await removeBgFromFile(it.file, options(), showStatus);
+    if (isAi()) clearStatus();
     if (it.url) URL.revokeObjectURL(it.url);
     it.url = URL.createObjectURL(r.blob);
     const base = it.file.name.replace(/\.[^.]+$/, '');
@@ -166,7 +201,7 @@ async function processItem(it: Item) {
 
     meta.className = 'meta ok';
     meta.textContent = f(T.done, { w: r.w, h: r.h, before: fmt(it.file.size), after: fmt(r.blob.size) });
-    if (manualColor === null && r.share < 0.6) { meta.className = 'meta'; meta.textContent += ' · ' + T.hintComplex; }
+    if (!isAi() && manualColor === null && r.share < 0.6) { meta.className = 'meta'; meta.textContent += ' · ' + T.hintComplex; }
     if (r.limited) meta.textContent += ' · ' + T.noteLimited;
     if (r.noteKey === 'webpFallback') meta.textContent += ' · ' + T.noteWebp;
 
@@ -183,6 +218,7 @@ async function processItem(it: Item) {
     console.error('Background removal failed:', err);
     meta.className = 'meta err';
     meta.textContent = T.failed;
+    if (isAi()) failAi();
   } finally {
     it.li.querySelector('.prog')?.remove();
   }
@@ -196,6 +232,10 @@ function changed() {
 }
 
 function syncUi() {
+  document.querySelectorAll<HTMLElement>('.color-only').forEach((el) => { el.hidden = isAi(); });
+  aiHint.hidden = !isAi();
+  credit.hidden = !isAi();
+  if (!isAi()) clearStatus();
   fill.hidden = bgmode.value !== 'color';
   qualityBox.hidden = fmtSel.value === 'png';
   jpgHint.hidden = fmtSel.value !== 'jpg';
@@ -208,6 +248,7 @@ readouts.forEach(([el, id, unit]) => el.addEventListener('input', () => { $(id).
 edges.addEventListener('change', changed);
 bgmode.addEventListener('change', () => { syncUi(); changed(); });
 fmtSel.addEventListener('change', () => { syncUi(); changed(); });
+methodSel.addEventListener('change', () => { syncUi(); changed(); });
 
 input.addEventListener('change', () => { add(input.files); input.value = ''; });
 ['dragenter', 'dragover'].forEach((e) =>
@@ -227,7 +268,7 @@ $('dlAll').addEventListener('click', () => {
 $('clear').addEventListener('click', () => {
   items.forEach((i) => i.url && URL.revokeObjectURL(i.url));
   items.length = 0; list.innerHTML = ''; bar.hidden = true;
-  previewImg?.done(); previewImg = null; origCanvas = null; previewWrap.hidden = true; manualColor = null;
+  previewSeq++; previewImg?.done(); previewImg = null; previewFile = null; clearStatus(); origCanvas = null; previewWrap.hidden = true; manualColor = null;
 });
 
 syncUi();

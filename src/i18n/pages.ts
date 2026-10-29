@@ -91,7 +91,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "Third-party services",
         "p": [
-          "This site is hosted and delivered through Cloudflare. Web fonts are loaded from Google Fonts, which means your browser may contact Google's servers to download the font files. These providers have their own privacy policies."
+          "This site is hosted and delivered through Cloudflare. Web fonts are loaded from Google Fonts, which means your browser may contact Google's servers to download the font files. These providers have their own privacy policies. The optional AI background removal downloads a small AI model (U²-Net, Apache-2.0 license) from this site. It then runs on your device and your images are not uploaded."
         ]
       },
       {
@@ -262,7 +262,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "第三方服務",
         "p": [
-          "本站透過 Cloudflare 託管與傳送。網頁字型從 Google Fonts 載入，這表示你的瀏覽器可能會連線到 Google 的伺服器下載字型檔。這些供應商各有自己的隱私權政策。"
+          "本站透過 Cloudflare 託管與傳送。網頁字型從 Google Fonts 載入，這表示你的瀏覽器可能會連線到 Google 的伺服器下載字型檔。這些供應商各有自己的隱私權政策。 選用的 AI 去背功能會從本站下載一個小型 AI 模型（U²-Net，Apache-2.0 授權），之後在你的裝置上執行，圖片不會被上傳。"
         ]
       },
       {
@@ -433,7 +433,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "第三者のサービス",
           "p": [
-            "当サイトは Cloudflare を通じてホスティングおよび配信されています。ウェブフォントは Google Fonts から読み込まれるため、お使いのブラウザがフォントファイルをダウンロードするために Google のサーバーに接続することがあります。これらの提供元には、それぞれ独自のプライバシーポリシーがあります。"
+            "当サイトは Cloudflare を通じてホスティングおよび配信されています。ウェブフォントは Google Fonts から読み込まれるため、お使いのブラウザがフォントファイルをダウンロードするために Google のサーバーに接続することがあります。これらの提供元には、それぞれ独自のプライバシーポリシーがあります。 任意の AI 背景削除機能では、当サイトから小さな AI モデル（U²-Net、Apache-2.0 ライセンス）をダウンロードします。その後はお使いのデバイス上で動作し、画像はアップロードされません。"
           ]
         },
         {
@@ -604,7 +604,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "제3자 서비스",
           "p": [
-            "이 사이트는 Cloudflare를 통해 호스팅되고 전송됩니다. 웹 글꼴은 Google Fonts에서 불러오므로, 사용자의 브라우저가 글꼴 파일을 내려받기 위해 Google 서버에 연결할 수 있습니다. 이 업체들은 각자의 개인정보처리방침을 가지고 있습니다."
+            "이 사이트는 Cloudflare를 통해 호스팅되고 전송됩니다. 웹 글꼴은 Google Fonts에서 불러오므로, 사용자의 브라우저가 글꼴 파일을 내려받기 위해 Google 서버에 연결할 수 있습니다. 이 업체들은 각자의 개인정보처리방침을 가지고 있습니다. 선택 사항인 AI 배경 제거 기능은 이 사이트에서 작은 AI 모델(U²-Net, Apache-2.0 라이선스)을 내려받습니다. 이후에는 기기에서 실행되며 이미지는 업로드되지 않습니다."
           ]
         },
         {

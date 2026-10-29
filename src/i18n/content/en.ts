@@ -497,11 +497,11 @@ export const en: Record<string, ToolCopy> = {
     "name": "Remove Background",
     "h1": "Remove the background from images without uploading them",
     "title": "Remove Image Background Online – Free, Private, No Upload",
-    "description": "Make a plain white or single-color background transparent in your browser. Your images never leave your device. No sign-up, no limits.",
+    "description": "Remove an image background in your browser, by color or with AI. Your images never leave your device. No sign-up, no limits.",
     "intro": "Turn a plain background transparent, or swap it for another color, right in your browser. Nothing is uploaded, and there is no sign-up or file limit.",
     "howTo": [
       "Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.",
-      "The tool picks the background color from the edges of the picture. If it picked the wrong one, click the picture where the background is.",
+      "Choose a method. By color suits plain backgrounds: the tool picks the color from the edges, and you can click the picture to choose another. AI suits busy backgrounds and finds the subject by itself.",
       "Adjust Tolerance until all of the background is gone but the subject is intact.",
       "Use Edge softness and Trim edges to clean up the outline. Choose Transparent or a Solid color for what replaces the background.",
       "Check the results in the list, then download each image or use Download all."
@@ -510,7 +510,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "How this tool works",
         "p": [
-          "This tool removes a background by its color. It finds pixels that look like the background color and makes them transparent, with a soft edge so the outline does not look cut out with scissors. It does not use artificial intelligence, so it works best when the background is one plain color."
+          "This tool has two methods. By color finds pixels that look like the background color and makes them transparent, with a soft edge so the outline does not look cut out with scissors. It works best when the background is one plain color. The AI method uses a small neural network (U²-Net, Apache-2.0 license) that finds the main subject and cuts it out. The model is about 4.4 MB, downloaded once, and runs on your device."
         ]
       },
       {
@@ -523,7 +523,7 @@ export const en: Record<string, ToolCopy> = {
         "h": "What does not work well",
         "p": [
           "Busy backgrounds such as streets, rooms or crowds cannot be removed by color. The same goes for photos where the subject has almost the same color as the background, and for soft shadows, which keep a little of the background color. Hair and fur against a plain wall can look rough at the edges.",
-          "If your photo has a complicated background, a tool that uses artificial intelligence will do a better job than this one."
+          "If your photo has a complicated background, switch to the AI method, which handles it much better."
         ]
       },
       {
@@ -546,7 +546,7 @@ export const en: Record<string, ToolCopy> = {
       },
       {
         "q": "Does this use artificial intelligence?",
-        "a": "No. It removes pixels that match a background color you can see and adjust. That makes it fast and private, but it cannot tell a person from a street scene."
+        "a": "Only if you choose the AI method. By color, it removes pixels that match a background color you can see and adjust. The AI method runs a small model on your device, so your images are still not uploaded."
       },
       {
         "q": "Why did part of my subject disappear?",
@@ -558,7 +558,7 @@ export const en: Record<string, ToolCopy> = {
       },
       {
         "q": "Can I remove a complicated background such as a street or a room?",
-        "a": "Not with this tool. It only removes backgrounds that are mostly one color. For complicated backgrounds, you need a tool that uses artificial intelligence."
+        "a": "Yes, with the AI method. It finds the main subject by itself, so streets and rooms are fine, though fine hair or glass can look rough. By color only works on mostly one-color backgrounds."
       },
       {
         "q": "Can I change the background of an ID photo to white or blue?",

@@ -6,11 +6,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "prepare-ai": "node scripts/prepare-ai.mjs",
+    "predev": "node scripts/prepare-ai.mjs",
+    "prebuild": "node scripts/prepare-ai.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.0",
     "astro": "^5.0.0",
-    "heic2any": "0.0.4"
+    "heic2any": "0.0.4",
+    "onnxruntime-web": "^1.22.0"
   }
 }
