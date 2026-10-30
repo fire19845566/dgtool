@@ -42,3 +42,13 @@ Each tool added later needs copy in every language (or it shows in English).
 - `src/pages/sw.js.ts` builds `/sw.js` from `src/pwa/sw-source.ts`. Its version changes on every build, so each deploy replaces the old cache.
 - `src/scripts/pwa.ts` registers the worker, asks it to keep the visitor's language pages for offline use, and shows the "Install app" button.
 - Icons are in `public/icons/`. Ads and other sites are never intercepted by the worker (only same-origin requests).
+
+## AI background removal (U²-Net, Apache-2.0)
+The "AI" method of the Remove Background tool runs the `u2netp` model (U²-Net by Xuebin Qin et al., Apache-2.0) in the browser with ONNX Runtime Web.
+1. `npm install` (adds `onnxruntime-web`).
+2. Download `u2netp.onnx` (about 4.4 MB) from the U²-Net / rembg releases (or a byte-for-byte mirror such as huggingface.co/edgetools/u2netp) and save it as `public/models/u2netp.onnx`.
+3. `npm run dev`. The script `scripts/prepare-ai.mjs` runs first and copies the WebAssembly files into `public/ort/` (it also runs before `npm run build`). Optionally add `public/ort/` to `.gitignore`.
+4. Commit `public/models/u2netp.onnx` (small enough for Cloudflare Pages' 25 MiB per-file limit).
+
+Licenses: keep the credit line shown on the page when the AI method is selected. U²-Net and ONNX Runtime (MIT) permit commercial use.
+Do not swap in RMBG-1.4 (non-commercial) or `@imgly/background-removal` (AGPL) without checking their licenses.

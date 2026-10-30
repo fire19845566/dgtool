@@ -15,10 +15,35 @@ const strings = { ...t.common, ...r };
   </label>
   <input id="file" type="file" accept={tool.accept} multiple />
 
+  <div class="opts selects">
+    <label>{r.method}
+      <select id="method" class="sel">
+        <option value="color">{r.methodColor}</option>
+        <option value="ai">{r.methodAi}</option>
+      </select>
+    </label>
+  </div>
+  <p class="hint" id="aiHint" hidden>{r.aiHint}</p>
+  <p class="meta" id="aiStatus" role="status" hidden></p>
+  <div class="opts ai-only" hidden>
+    <label for="aikeep">{r.aiKeep}</label>
+    <input id="aikeep" type="range" min="0" max="100" value="60" />
+    <span id="aikeepv">60</span>
+  </div>
+
   <div id="previewWrap" hidden>
     <canvas id="preview" role="img" aria-label={r.previewAlt}></canvas>
-    <p class="hint" id="pickHelp">{r.previewHelp}</p>
-    <div class="opts selects">
+    <div class="opts selects" id="brushBar">
+      <button id="brushKeep" class="btn ghost small" type="button" aria-pressed="false">{r.brushKeep}</button>
+      <button id="brushErase" class="btn ghost small" type="button" aria-pressed="false">{r.brushErase}</button>
+      <label>{r.brushSize} <input id="brushSize" type="range" min="6" max="80" value="24" /></label>
+      <button id="undoBtn" class="btn ghost small" type="button">{r.undo}</button>
+      <button id="resetEdits" class="btn ghost small" type="button">{r.resetEdits}</button>
+    </div>
+    <label class="check" id="ghostBox"><input id="ghost" type="checkbox" /> {r.brushGhost}</label>
+    <p class="hint" id="editHelp">{r.editHelp}</p>
+    <p class="hint color-only" id="pickHelp">{r.previewHelp}</p>
+    <div class="opts selects color-only">
       <span class="meta">{r.bgColor}</span>
       <span id="swatch" class="swatch" aria-hidden="true"></span>
       <span id="hex" class="meta"></span>
@@ -27,22 +52,22 @@ const strings = { ...t.common, ...r };
     <p id="warn" class="meta err" hidden>{r.hintComplex}</p>
   </div>
 
-  <div class="opts">
+  <div class="opts color-only">
     <label for="tol">{r.tolerance}</label>
     <input id="tol" type="range" min="0" max="100" value="30" />
     <span id="tolv">30</span>
   </div>
-  <div class="opts">
+  <div class="opts color-only">
     <label for="soft">{r.softness}</label>
     <input id="soft" type="range" min="0" max="3" value="1" />
     <span id="softv">1</span>
   </div>
-  <div class="opts">
+  <div class="opts color-only">
     <label for="trim">{r.trim}</label>
     <input id="trim" type="range" min="0" max="5" value="0" />
     <span id="trimv">0</span>
   </div>
-  <div class="opts selects">
+  <div class="opts selects color-only">
     <label class="check"><input id="edges" type="checkbox" checked /> {r.edgesOnly}</label>
   </div>
 
@@ -74,6 +99,7 @@ const strings = { ...t.common, ...r };
     <button class="btn ghost" id="clear" type="button">{t.common.clear}</button>
   </div>
 
+  <p class="hint" id="credit" hidden>{r.credit}</p>
   <ul id="list" aria-live="polite"></ul>
 </div>
 
