@@ -179,3 +179,6 @@ h2 a{color:var(--ink)}
 .ai-only[hidden],.color-only[hidden],#aiHint[hidden],#aiStatus[hidden],#credit[hidden]{display:none}
 #list li.pickable{cursor:pointer}
 #list li.sel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+#brushBar .btn[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+#brushBar #brushErase[aria-pressed="true"]{background:#E5484D;border-color:#E5484D}
+#preview.brushing{cursor:crosshair;touch-action:none}

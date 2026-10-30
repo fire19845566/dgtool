@@ -33,6 +33,14 @@ const strings = { ...t.common, ...r };
 
   <div id="previewWrap" hidden>
     <canvas id="preview" role="img" aria-label={r.previewAlt}></canvas>
+    <div class="opts selects" id="brushBar">
+      <button id="brushKeep" class="btn ghost small" type="button" aria-pressed="false">{r.brushKeep}</button>
+      <button id="brushErase" class="btn ghost small" type="button" aria-pressed="false">{r.brushErase}</button>
+      <label>{r.brushSize} <input id="brushSize" type="range" min="6" max="80" value="24" /></label>
+      <button id="undoBtn" class="btn ghost small" type="button">{r.undo}</button>
+      <button id="resetEdits" class="btn ghost small" type="button">{r.resetEdits}</button>
+    </div>
+    <p class="hint" id="editHelp">{r.editHelp}</p>
     <p class="hint color-only" id="pickHelp">{r.previewHelp}</p>
     <div class="opts selects color-only">
       <span class="meta">{r.bgColor}</span>

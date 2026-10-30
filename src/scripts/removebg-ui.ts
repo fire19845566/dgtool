@@ -1,4 +1,4 @@
-import { loadImage, cutOut, composeBg, removeBgFromFile, type RemoveBgOptions } from './converter';
+import { loadImage, cutOut, composeBg, removeBgFromFile, type RemoveBgOptions, type Stroke } from './converter';
 import type { AiStatus } from './ai-bg';
 import type { RGB } from './bgremove';
 
@@ -34,12 +34,19 @@ const methodSel = $<HTMLSelectElement>('method');
 const aiHint = $('aiHint');
 const aiStatus = $('aiStatus');
 const credit = $('credit');
+const brushKeepBtn = $<HTMLButtonElement>('brushKeep');
+const brushEraseBtn = $<HTMLButtonElement>('brushErase');
+const brushSize = $<HTMLInputElement>('brushSize');
+const undoBtn = $<HTMLButtonElement>('undoBtn');
+const resetEditsBtn = $<HTMLButtonElement>('resetEdits');
 
-type Item = { file: File; li: HTMLLIElement; ok: boolean; url?: string; name?: string };
+type Item = { file: File; li: HTMLLIElement; ok: boolean; url?: string; name?: string; strokes: Stroke[] };
 const items: Item[] = [];
 let manualColor: RGB | null = null;
 let previewImg: Awaited<ReturnType<typeof loadImage>> | null = null;
 let previewFile: File | null = null;
+let previewItem: Item | null = null;                 // the picture shown in the preview; brush edits belong to it
+let brush: 'keep' | 'erase' | null = null;
 let previewSeq = 0;                                   // ignores previews that finish after a newer one started
 let origCanvas: HTMLCanvasElement | null = null;      // the preview picture before removal, for picking colors
 let previewReq = 0;                                   // ignores picture loads that finish after a newer choice
@@ -53,8 +60,9 @@ const TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const fmt = (n: number) =>
   n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
 
-function options(): RemoveBgOptions {
+function options(strokes: Stroke[] = previewItem?.strokes ?? []): RemoveBgOptions {
   return {
+    strokes,
     method: methodSel.value as 'color' | 'ai',
     aiKeep: Number(aiKeepEl.value),
     color: [255, 255, 255],
@@ -105,7 +113,15 @@ async function drawPreview() {
   const shown = composeBg(cut, o, false);              // shows the chosen color when "Solid color" is on
   preview.width = shown.width;
   preview.height = shown.height;
-  preview.getContext('2d')!.drawImage(shown, 0, 0);
+  const pctx = preview.getContext('2d')!;
+  if (brush) {                                         // show the removed parts faintly so they can be painted back
+    pctx.fillStyle = '#ffffff';
+    pctx.fillRect(0, 0, shown.width, shown.height);
+    pctx.globalAlpha = 0.3;
+    pctx.drawImage(img.src, 0, 0, shown.width, shown.height);
+    pctx.globalAlpha = 1;
+  }
+  pctx.drawImage(shown, 0, 0);
   // Keep the original at the same size so a click can read the background color.
   origCanvas = document.createElement('canvas');
   origCanvas.width = shown.width;
@@ -119,7 +135,7 @@ async function drawPreview() {
 }
 
 preview.addEventListener('click', (ev) => {
-  if (!origCanvas) return;
+  if (!origCanvas || brush) return;
   const rect = preview.getBoundingClientRect();
   const x = Math.max(0, Math.min(preview.width - 1, Math.floor(((ev.clientX - rect.left) / rect.width) * preview.width)));
   const y = Math.max(0, Math.min(preview.height - 1, Math.floor(((ev.clientY - rect.top) / rect.height) * preview.height)));
@@ -131,6 +147,7 @@ autoBtn.addEventListener('click', () => { manualColor = null; changed(); });
 
 function selectPreview(file: File, li: HTMLLIElement) {
   const req = ++previewReq;
+  previewItem = items.find((i) => i.li === li) ?? null;
   list.querySelectorAll('li.sel').forEach((el) => el.classList.remove('sel'));
   li.classList.add('sel');
   loadImage(file)
@@ -168,7 +185,7 @@ function add(files: FileList | null) {
         selectPreview(file, li);
       });
     }
-    items.push({ file, li, ok });
+    items.push({ file, li, ok, strokes: [] });
   }
   if (lastOk) selectPreview(lastOk.file, lastOk.li);        // the newest picture becomes the preview
   kick();
@@ -203,7 +220,7 @@ async function processItem(it: Item) {
     it.li.querySelector('.info')!.appendChild(p);
   }
   try {
-    const r = await removeBgFromFile(it.file, options(), showStatus);
+    const r = await removeBgFromFile(it.file, options(it.strokes), showStatus);
     if (isAi()) clearStatus();
     if (it.url) URL.revokeObjectURL(it.url);
     it.url = URL.createObjectURL(r.blob);
@@ -289,7 +306,60 @@ $('dlAll').addEventListener('click', () => {
 $('clear').addEventListener('click', () => {
   items.forEach((i) => i.url && URL.revokeObjectURL(i.url));
   items.length = 0; list.innerHTML = ''; bar.hidden = true;
-  previewSeq++; previewReq++; previewImg?.done(); previewImg = null; previewFile = null; clearStatus(); origCanvas = null; previewWrap.hidden = true; manualColor = null;
+  previewSeq++; previewReq++; previewItem = null; previewImg?.done(); previewImg = null; previewFile = null; clearStatus(); origCanvas = null; previewWrap.hidden = true; manualColor = null;
 });
+
+// ---- brush ---------------------------------------------------------------
+function setBrush(b: 'keep' | 'erase' | null) {
+  brush = b;
+  brushKeepBtn.setAttribute('aria-pressed', String(b === 'keep'));
+  brushEraseBtn.setAttribute('aria-pressed', String(b === 'erase'));
+  preview.classList.toggle('brushing', !!b);
+  drawPreview();
+}
+brushKeepBtn.addEventListener('click', () => setBrush(brush === 'keep' ? null : 'keep'));
+brushEraseBtn.addEventListener('click', () => setBrush(brush === 'erase' ? null : 'erase'));
+undoBtn.addEventListener('click', () => { if (previewItem?.strokes.length) { previewItem.strokes.pop(); changed(); } });
+resetEditsBtn.addEventListener('click', () => { if (previewItem?.strokes.length) { previewItem.strokes.length = 0; changed(); } });
+
+let drawing: Stroke | null = null;
+const toNorm = (ev: PointerEvent): [number, number] => {
+  const rect = preview.getBoundingClientRect();
+  return [(ev.clientX - rect.left) / rect.width, (ev.clientY - rect.top) / rect.height];
+};
+function liveDot(ev: PointerEvent, st: Stroke) {      // instant feedback while dragging
+  const ctx = preview.getContext('2d')!;
+  const rect = preview.getBoundingClientRect();
+  const [x, y] = toNorm(ev);
+  ctx.fillStyle = st.mode === 'keep' ? 'rgba(0,200,90,.45)' : 'rgba(229,72,77,.45)';
+  ctx.beginPath();
+  ctx.arc(x * preview.width, y * preview.height, st.r * preview.width, 0, Math.PI * 2);
+  ctx.fill();
+  void rect;
+}
+preview.addEventListener('pointerdown', (ev) => {
+  if (!brush || !previewItem) return;
+  ev.preventDefault();
+  preview.setPointerCapture(ev.pointerId);
+  const rect = preview.getBoundingClientRect();
+  drawing = { mode: brush, r: Number(brushSize.value) / 2 / rect.width, pts: [toNorm(ev)] };
+  liveDot(ev, drawing);
+});
+preview.addEventListener('pointermove', (ev) => {
+  if (!drawing) return;
+  const [x, y] = toNorm(ev);
+  const last = drawing.pts[drawing.pts.length - 1];
+  if (Math.hypot(x - last[0], y - last[1]) < drawing.r / 3) return;
+  drawing.pts.push([Math.min(1, Math.max(0, x)), Math.min(1, Math.max(0, y))]);
+  liveDot(ev, drawing);
+});
+const endStroke = () => {
+  if (!drawing || !previewItem) { drawing = null; return; }
+  previewItem.strokes.push(drawing);
+  drawing = null;
+  changed();
+};
+preview.addEventListener('pointerup', endStroke);
+preview.addEventListener('pointercancel', () => { drawing = null; drawPreview(); });
 
 syncUi();

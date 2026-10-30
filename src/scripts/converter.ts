@@ -581,7 +581,15 @@ export async function watermarkImage(file: File, o: WatermarkOptions, mark: Mark
 // ---------------------------------------------------------------------------
 // Background removal (by color)
 // ---------------------------------------------------------------------------
+// A hand-painted correction. Points and radius are fractions of the picture's width/height so they fit any size.
+export interface Stroke {
+  mode: 'keep' | 'erase';
+  r: number;                        // radius, as a fraction of the picture's width
+  pts: [number, number][];          // 0..1 in x and y
+}
+
 export interface RemoveBgOptions extends BgOptions {
+  strokes: Stroke[];
   method: 'color' | 'ai';
   aiKeep: number;                   // 0..100, AI method: how much of the uncertain areas to keep
   manualColor: RGB | null;          // picked by the user; null = detect from the edges
@@ -614,19 +622,65 @@ export async function cutOut(img: Decoded, key: object, o: RemoveBgOptions, maxW
   ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(img.src, 0, 0, w, h);
   const data = ctx.getImageData(0, 0, w, h);
+  const orig = o.strokes.length ? new Uint8ClampedArray(data.data) : null;   // needed to bring back painted areas
+  let color: RGB = [0, 0, 0];
+  let share = 1;
   if (o.method === 'ai') {
     const mask = await maskFor(key, img.src, onStatus);
     applyMask(data, mask, undefined, o.aiKeep);
-    ctx.putImageData(data, 0, 0);
-    return { canvas: c, color: [0, 0, 0] as RGB, share: 1, scale };
+  } else {
+    const detected = detectBackground(data);
+    color = o.manualColor ?? detected.color;
+    share = detected.share;
+    // "Trim" is in pixels of the full-size image: scale it for the smaller preview.
+    const trim = Math.round(o.trim * scale);
+    removeBackground(data, { ...o, color, trim });
   }
-  const detected = detectBackground(data);
-  const color = o.manualColor ?? detected.color;
-  // "Trim" is in pixels of the full-size image: scale it for the smaller preview.
-  const trim = Math.round(o.trim * scale);
-  removeBackground(data, { ...o, color, trim });
+  if (orig) applyStrokes(data, orig, o.strokes);
   ctx.putImageData(data, 0, 0);
-  return { canvas: c, color, share: detected.share, scale };
+  return { canvas: c, color, share, scale };
+}
+
+// Paints the user's "keep" and "erase" strokes over the result. Later strokes win.
+export function applyStrokes(data: ImageData, orig: Uint8ClampedArray, strokes: Stroke[]) {
+  const { width: w, height: h } = data;
+  const e = document.createElement('canvas');
+  e.width = w;
+  e.height = h;
+  const g = e.getContext('2d', { willReadFrequently: true })!;
+  g.fillStyle = 'rgb(128,128,128)';                 // 128 = untouched
+  g.fillRect(0, 0, w, h);
+  g.lineCap = 'round';
+  g.lineJoin = 'round';
+  for (const st of strokes) {
+    const col = st.mode === 'keep' ? '#fff' : '#000';
+    g.strokeStyle = col;
+    g.fillStyle = col;
+    g.lineWidth = Math.max(1, st.r * w * 2);
+    g.beginPath();
+    st.pts.forEach(([x, y], i) => (i ? g.lineTo(x * w, y * h) : g.moveTo(x * w, y * h)));
+    if (st.pts.length === 1) {                     // a single tap draws a dot
+      g.arc(st.pts[0][0] * w, st.pts[0][1] * h, Math.max(0.5, st.r * w), 0, Math.PI * 2);
+      g.fill();
+    } else {
+      g.stroke();
+    }
+  }
+  const m = g.getImageData(0, 0, w, h).data;
+  const d = data.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const v = m[i];
+    if (v === 128) continue;
+    if (v > 128) {
+      const k = (v - 128) / 127;                    // toward fully kept, with the picture's own colors
+      const a = d[i + 3];
+      const na = Math.round(a + (255 - a) * k);
+      if (a === 0 || k >= 1) { d[i] = orig[i]; d[i + 1] = orig[i + 1]; d[i + 2] = orig[i + 2]; }
+      d[i + 3] = na;
+    } else {
+      d[i + 3] = Math.round(d[i + 3] * (v / 128));  // toward fully removed
+    }
+  }
 }
 
 // Puts the cut-out on a solid color when asked, otherwise keeps it transparent.
