@@ -37,6 +37,7 @@ const credit = $('credit');
 const brushKeepBtn = $<HTMLButtonElement>('brushKeep');
 const brushEraseBtn = $<HTMLButtonElement>('brushErase');
 const brushSize = $<HTMLInputElement>('brushSize');
+const ghostEl = $<HTMLInputElement>('ghost');
 const undoBtn = $<HTMLButtonElement>('undoBtn');
 const resetEditsBtn = $<HTMLButtonElement>('resetEdits');
 
@@ -114,7 +115,7 @@ async function drawPreview() {
   preview.width = shown.width;
   preview.height = shown.height;
   const pctx = preview.getContext('2d')!;
-  if (brush) {                                         // show the removed parts faintly so they can be painted back
+  if (brush && ghostEl.checked) {                      // optional: show the removed parts faintly so they can be painted back
     pctx.globalAlpha = 0.3;
     pctx.drawImage(img.src, 0, 0, shown.width, shown.height);
     pctx.globalAlpha = 1;
@@ -317,6 +318,7 @@ function setBrush(b: 'keep' | 'erase' | null) {
 }
 brushKeepBtn.addEventListener('click', () => setBrush(brush === 'keep' ? null : 'keep'));
 brushEraseBtn.addEventListener('click', () => setBrush(brush === 'erase' ? null : 'erase'));
+ghostEl.addEventListener('change', () => drawPreview());
 undoBtn.addEventListener('click', () => { if (previewItem?.strokes.length) { previewItem.strokes.pop(); changed(); } });
 resetEditsBtn.addEventListener('click', () => { if (previewItem?.strokes.length) { previewItem.strokes.length = 0; changed(); } });
 
