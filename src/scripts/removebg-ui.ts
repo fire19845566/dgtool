@@ -115,8 +115,6 @@ async function drawPreview() {
   preview.height = shown.height;
   const pctx = preview.getContext('2d')!;
   if (brush) {                                         // show the removed parts faintly so they can be painted back
-    pctx.fillStyle = '#ffffff';
-    pctx.fillRect(0, 0, shown.width, shown.height);
     pctx.globalAlpha = 0.3;
     pctx.drawImage(img.src, 0, 0, shown.width, shown.height);
     pctx.globalAlpha = 1;
