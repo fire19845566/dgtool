@@ -495,8 +495,8 @@ export const en: Record<string, ToolCopy> = {
   },
   "remove-background": {
     "name": "Remove Background",
-    "h1": "Remove the background from images without uploading them",
-    "title": "Remove Image Background Online – Free, Private, No Upload",
+    "h1": "Remove image backgrounds with AI, without uploading",
+    "title": "Remove Image Background Online – Free AI, No Upload",
     "description": "Remove an image background in your browser, by color or with AI. Your images never leave your device. No sign-up, no limits.",
     "intro": "Turn a plain background transparent, or swap it for another color, right in your browser. Nothing is uploaded, and there is no sign-up or file limit.",
     "howTo": [
