@@ -177,3 +177,5 @@ h2 a{color:var(--ink)}
   .prog i{animation:none;width:60%}
 }
 .ai-only[hidden],.color-only[hidden],#aiHint[hidden],#aiStatus[hidden],#credit[hidden]{display:none}
+#list li.pickable{cursor:pointer}
+#list li.sel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}

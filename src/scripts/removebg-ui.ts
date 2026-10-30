@@ -42,7 +42,7 @@ let previewImg: Awaited<ReturnType<typeof loadImage>> | null = null;
 let previewFile: File | null = null;
 let previewSeq = 0;                                   // ignores previews that finish after a newer one started
 let origCanvas: HTMLCanvasElement | null = null;      // the preview picture before removal, for picking colors
-let previewLoading = false;
+let previewReq = 0;                                   // ignores picture loads that finish after a newer choice
 let running = false;
 let again = false;
 let runTimer = 0;
@@ -129,8 +129,24 @@ preview.addEventListener('click', (ev) => {
 });
 autoBtn.addEventListener('click', () => { manualColor = null; changed(); });
 
+function selectPreview(file: File, li: HTMLLIElement) {
+  const req = ++previewReq;
+  list.querySelectorAll('li.sel').forEach((el) => el.classList.remove('sel'));
+  li.classList.add('sel');
+  loadImage(file)
+    .then((img) => {
+      if (req !== previewReq) { img.done(); return; }           // a newer choice (or Clear) came first
+      previewImg?.done();
+      previewImg = img;
+      previewFile = file;
+      drawPreview();
+    })
+    .catch(() => { /* the list shows the error */ });
+}
+
 function add(files: FileList | null) {
   if (!files) return;
+  let lastOk: { file: File; li: HTMLLIElement } | null = null;
   for (const file of Array.from(files)) {
     const li = document.createElement('li');
     li.innerHTML =
@@ -144,15 +160,17 @@ function add(files: FileList | null) {
       meta.className = 'meta err';
       meta.textContent = T.unsupported;
       li.querySelector('.prog')?.remove();
-    } else if (!previewImg && !previewLoading) {
-      previewLoading = true;                      // only the first picture becomes the preview
-      loadImage(file)
-        .then((img) => { previewImg = img; previewFile = file; drawPreview(); })
-        .catch(() => { /* the list shows the error */ })
-        .finally(() => { previewLoading = false; });
+    } else {
+      lastOk = { file, li };
+      li.classList.add('pickable');
+      li.addEventListener('click', (ev) => {
+        if ((ev.target as HTMLElement).closest('a')) return;       // the download button keeps working
+        selectPreview(file, li);
+      });
     }
     items.push({ file, li, ok });
   }
+  if (lastOk) selectPreview(lastOk.file, lastOk.li);        // the newest picture becomes the preview
   kick();
 }
 
@@ -271,7 +289,7 @@ $('dlAll').addEventListener('click', () => {
 $('clear').addEventListener('click', () => {
   items.forEach((i) => i.url && URL.revokeObjectURL(i.url));
   items.length = 0; list.innerHTML = ''; bar.hidden = true;
-  previewSeq++; previewImg?.done(); previewImg = null; previewFile = null; clearStatus(); origCanvas = null; previewWrap.hidden = true; manualColor = null;
+  previewSeq++; previewReq++; previewImg?.done(); previewImg = null; previewFile = null; clearStatus(); origCanvas = null; previewWrap.hidden = true; manualColor = null;
 });
 
 syncUi();
