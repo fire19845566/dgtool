@@ -57,6 +57,39 @@ export function normalizeMask(raw: Float32Array, size = AI_MODEL.size): Float32A
   return out;
 }
 
+// Removes small islands that are not connected to the main subject (stray spots, wall holes...).
+// Regions whose area is below `minShare` of the largest region are cleared. Several large subjects are all kept.
+export function cleanMask(mask: Float32Array, size = AI_MODEL.size, minShare = 0.02, level = 0.15): Float32Array {
+  const n = size * size;
+  const label = new Int32Array(n);
+  const areas: number[] = [0];
+  const stack = new Int32Array(n);
+  for (let i = 0; i < n; i++) {
+    if (mask[i] <= level || label[i]) continue;
+    const id = areas.length;
+    let area = 0, sp = 0;
+    stack[sp++] = i;
+    label[i] = id;
+    while (sp) {
+      const k = stack[--sp];
+      area++;
+      const x = k % size, y = (k - x) / size;
+      if (x > 0 && mask[k - 1] > level && !label[k - 1]) { label[k - 1] = id; stack[sp++] = k - 1; }
+      if (x < size - 1 && mask[k + 1] > level && !label[k + 1]) { label[k + 1] = id; stack[sp++] = k + 1; }
+      if (y > 0 && mask[k - size] > level && !label[k - size]) { label[k - size] = id; stack[sp++] = k - size; }
+      if (y < size - 1 && mask[k + size] > level && !label[k + size]) { label[k + size] = id; stack[sp++] = k + size; }
+    }
+    areas.push(area);
+  }
+  const biggest = Math.max(0, ...areas);
+  const out = new Float32Array(mask);
+  for (let i = 0; i < n; i++) {
+    const id = label[i];
+    if (id && areas[id] < biggest * minShare) out[i] = 0;
+  }
+  return out;
+}
+
 const smoothstep = (a: number, b: number, x: number) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
   return t * t * (3 - 2 * t);
@@ -70,7 +103,7 @@ export function applyMask(img: ImageData, mask: Float32Array, size = AI_MODEL.si
   const mctx = m.getContext('2d')!;
   const md = mctx.createImageData(size, size);
   for (let i = 0; i < size * size; i++) {
-    const v = Math.round(255 * smoothstep(0.08, 0.92, mask[i]));
+    const v = Math.round(255 * smoothstep(0.15, 0.7, mask[i]));
     md.data[i * 4] = v;
     md.data[i * 4 + 1] = v;
     md.data[i * 4 + 2] = v;
@@ -142,7 +175,7 @@ export function maskFor(key: object, src: Source, onStatus?: (s: AiStatus) => vo
       const input = preprocess(src);
       const job = queue.then(() => r.run(input, AI_MODEL.size));   // sessions run one at a time
       queue = job.catch(() => undefined);
-      return normalizeMask(await job);
+      return cleanMask(normalizeMask(await job));
     })();
     cache.set(key, p);
     p.catch(() => cache.delete(key));
