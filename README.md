@@ -14,10 +14,9 @@ Browser-only image converters. One entry in `src/data/tools.ts` = one indexable 
 
 ## Before going live
 - Domain is set to dgtool.io in `astro.config.mjs` and `public/robots.txt`.
-- Fill in the TODOs in `src/pages/privacy.astro`.
 - Add a consent banner (CMP) before enabling ads for EU/UK visitors.
-- Check heic2any license terms and consider a newer HEIC decoder.
-- Deploy `dist/` to any static host (Cloudflare Pages, Netlify, Vercel).
+- Review the "Open-source components" table below; confirm the libheif license on its project page.
+- The site is deployed with Cloudflare Pages from the `main` branch (build: `npm run build`, output: `dist`). Work on a branch first and merge it after checking the preview URL.
 
 ## Brand
 Colors and fonts live as CSS variables at the top of `src/styles/global.css`.
@@ -52,3 +51,14 @@ The "AI" method of the Remove Background tool runs the `u2netp` model (U²-Net b
 
 Licenses: keep the credit line shown on the page when the AI method is selected. U²-Net and ONNX Runtime (MIT) permit commercial use.
 Do not swap in RMBG-1.4 (non-commercial) or `@imgly/background-removal` (AGPL) without checking their licenses.
+
+## Open-source components
+| Component | Used for | License | Status |
+|---|---|---|---|
+| heic2any | HEIC/HEIF decoding fallback | MIT (package) | Verified via package registry data. Keep the copyright notice and MIT text. |
+| libheif (bundled inside heic2any) | HEIC decoding | LGPL (from memory, not re-checked) | Confirmed present in the heic2any bundle; the bundle carries no license text. Credited with a link to its project on the About pages. |
+| U²-Net `u2netp` model | AI background removal | Apache-2.0 | Verified. Keep the credit line and notice. |
+| ONNX Runtime Web | Runs the model in the browser | MIT | From memory, not re-checked. |
+| Astro, @astrojs/sitemap | Site framework | MIT | From memory, not re-checked. |
+
+The About pages (all four languages) list these components. Update them when a dependency changes.

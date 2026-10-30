@@ -50,6 +50,13 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         ]
       },
       {
+        "h": "Open-source components",
+        "p": [
+          "DGTool is built with open-source software. HEIC decoding uses <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a> (MIT License, Copyright (c) 2020 Alex Corvi), which includes <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a> and its related codec libraries. libheif is licensed under the GNU Lesser General Public License (LGPL); the source code and the exact license terms are available from the libheif project.",
+          "AI background removal uses the <a href=\"https://github.com/xuebinqin/U-2-Net\" target=\"_blank\" rel=\"noopener\">U²-Net</a> model by Xuebin Qin and others (Apache License 2.0) and <a href=\"https://github.com/microsoft/onnxruntime\" target=\"_blank\" rel=\"noopener\">ONNX Runtime Web</a> by Microsoft (MIT License)."
+        ]
+      },
+      {
         "h": "Contact",
         "p": [
           "Questions, bug reports or tool suggestions are welcome at <a href=\"mailto:contact@dgtool.io\">contact@dgtool.io</a>."
@@ -218,6 +225,13 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         "h": "目前提供的工具",
         "p": [
           "瀏覽<a href=\"{image}\">圖片工具</a>，或回到<a href=\"{home}\">首頁</a>查看所有工具。"
+        ]
+      },
+      {
+        "h": "開源元件",
+        "p": [
+          "DGTool 使用開源軟體製作。HEIC 解碼使用 <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>（MIT 授權，Copyright (c) 2020 Alex Corvi），它內含 <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a> 及相關的編解碼函式庫。libheif 採用 GNU Lesser General Public License（LGPL）授權，原始碼與完整授權條款可在 libheif 專案取得。",
+          "AI 去背使用 Xuebin Qin 等人的 <a href=\"https://github.com/xuebinqin/U-2-Net\" target=\"_blank\" rel=\"noopener\">U²-Net</a> 模型（Apache License 2.0），以及 Microsoft 的 <a href=\"https://github.com/microsoft/onnxruntime\" target=\"_blank\" rel=\"noopener\">ONNX Runtime Web</a>（MIT 授權）。"
         ]
       },
       {
@@ -392,6 +406,13 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
           ]
         },
         {
+          "h": "オープンソースのコンポーネント",
+          "p": [
+            "DGTool はオープンソースソフトウェアを利用しています。HEIC のデコードには <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>（MIT ライセンス、Copyright (c) 2020 Alex Corvi）を使用しており、これには <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a> と関連するコーデックライブラリが含まれます。libheif は GNU Lesser General Public License（LGPL）で提供されており、ソースコードと正確なライセンス条件は libheif プロジェクトで入手できます。",
+            "AI による背景削除には、Xuebin Qin らの <a href=\"https://github.com/xuebinqin/U-2-Net\" target=\"_blank\" rel=\"noopener\">U²-Net</a> モデル（Apache License 2.0）と、Microsoft の <a href=\"https://github.com/microsoft/onnxruntime\" target=\"_blank\" rel=\"noopener\">ONNX Runtime Web</a>（MIT ライセンス）を使用しています。"
+          ]
+        },
+        {
           "h": "お問い合わせ",
           "p": [
             "ご質問、不具合の報告、ツールのご提案は <a href=\"mailto:contact@dgtool.io\">contact@dgtool.io</a> までお気軽にお寄せください。"
@@ -560,6 +581,13 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
           "h": "현재 제공 도구",
           "p": [
             "<a href=\"{image}\">이미지 도구</a>를 둘러보거나 <a href=\"{home}\">홈</a>으로 돌아가 모든 도구를 확인하세요."
+          ]
+        },
+        {
+          "h": "오픈소스 구성 요소",
+          "p": [
+            "DGTool은 오픈소스 소프트웨어로 만들어졌습니다. HEIC 디코딩에는 <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>(MIT 라이선스, Copyright (c) 2020 Alex Corvi)를 사용하며, 여기에는 <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a>와 관련 코덱 라이브러리가 포함되어 있습니다. libheif는 GNU Lesser General Public License(LGPL)로 제공되며, 소스 코드와 정확한 라이선스 조건은 libheif 프로젝트에서 확인할 수 있습니다.",
+            "AI 배경 제거에는 Xuebin Qin 등의 <a href=\"https://github.com/xuebinqin/U-2-Net\" target=\"_blank\" rel=\"noopener\">U²-Net</a> 모델(Apache License 2.0)과 Microsoft의 <a href=\"https://github.com/microsoft/onnxruntime\" target=\"_blank\" rel=\"noopener\">ONNX Runtime Web</a>(MIT 라이선스)를 사용합니다."
           ]
         },
         {
