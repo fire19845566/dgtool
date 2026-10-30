@@ -583,6 +583,7 @@ export async function watermarkImage(file: File, o: WatermarkOptions, mark: Mark
 // ---------------------------------------------------------------------------
 export interface RemoveBgOptions extends BgOptions {
   method: 'color' | 'ai';
+  aiKeep: number;                   // 0..100, AI method: how much of the uncertain areas to keep
   manualColor: RGB | null;          // picked by the user; null = detect from the edges
   background: 'transparent' | 'color';
   fillColor: string;                // '#rrggbb', used when background is "color"
@@ -615,7 +616,7 @@ export async function cutOut(img: Decoded, key: object, o: RemoveBgOptions, maxW
   const data = ctx.getImageData(0, 0, w, h);
   if (o.method === 'ai') {
     const mask = await maskFor(key, img.src, onStatus);
-    applyMask(data, mask);
+    applyMask(data, mask, undefined, o.aiKeep);
     ctx.putImageData(data, 0, 0);
     return { canvas: c, color: [0, 0, 0] as RGB, share: 1, scale };
   }

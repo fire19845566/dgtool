@@ -25,6 +25,11 @@ const strings = { ...t.common, ...r };
   </div>
   <p class="hint" id="aiHint" hidden>{r.aiHint}</p>
   <p class="meta" id="aiStatus" role="status" hidden></p>
+  <div class="opts ai-only" hidden>
+    <label for="aikeep">{r.aiKeep}</label>
+    <input id="aikeep" type="range" min="0" max="100" value="60" />
+    <span id="aikeepv">60</span>
+  </div>
 
   <div id="previewWrap" hidden>
     <canvas id="preview" role="img" aria-label={r.previewAlt}></canvas>

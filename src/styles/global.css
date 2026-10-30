@@ -176,4 +176,4 @@ h2 a{color:var(--ink)}
   .card:hover{transform:none}
   .prog i{animation:none;width:60%}
 }
-.color-only[hidden],#aiHint[hidden],#aiStatus[hidden],#credit[hidden]{display:none}
+.ai-only[hidden],.color-only[hidden],#aiHint[hidden],#aiStatus[hidden],#credit[hidden]{display:none}

@@ -29,6 +29,7 @@ const fmtSel = $<HTMLSelectElement>('fmt');
 const q = $<HTMLInputElement>('q');
 const qualityBox = $('qualityBox');
 const jpgHint = $('jpgHint');
+const aiKeepEl = $<HTMLInputElement>('aikeep');
 const methodSel = $<HTMLSelectElement>('method');
 const aiHint = $('aiHint');
 const aiStatus = $('aiStatus');
@@ -55,6 +56,7 @@ const fmt = (n: number) =>
 function options(): RemoveBgOptions {
   return {
     method: methodSel.value as 'color' | 'ai',
+    aiKeep: Number(aiKeepEl.value),
     color: [255, 255, 255],
     manualColor,
     tolerance: Number(tol.value),
@@ -233,6 +235,7 @@ function changed() {
 
 function syncUi() {
   document.querySelectorAll<HTMLElement>('.color-only').forEach((el) => { el.hidden = isAi(); });
+  document.querySelectorAll<HTMLElement>('.ai-only').forEach((el) => { el.hidden = !isAi(); });
   aiHint.hidden = !isAi();
   credit.hidden = !isAi();
   if (!isAi()) clearStatus();
@@ -241,10 +244,10 @@ function syncUi() {
   jpgHint.hidden = fmtSel.value !== 'jpg';
 }
 
-const readouts: [HTMLInputElement, string, string][] = [[tol, 'tolv', ''], [soft, 'softv', ''], [trim, 'trimv', ''], [q, 'qv', '%']];
+const readouts: [HTMLInputElement, string, string][] = [[tol, 'tolv', ''], [soft, 'softv', ''], [trim, 'trimv', ''], [q, 'qv', '%'], [aiKeepEl, 'aikeepv', '']];
 readouts.forEach(([el, id, unit]) => el.addEventListener('input', () => { $(id).textContent = el.value + unit; }));
 
-[tol, soft, trim, q, fill].forEach((el) => el.addEventListener('input', changed));
+[tol, soft, trim, q, fill, aiKeepEl].forEach((el) => el.addEventListener('input', changed));
 edges.addEventListener('change', changed);
 bgmode.addEventListener('change', () => { syncUi(); changed(); });
 fmtSel.addEventListener('change', () => { syncUi(); changed(); });
