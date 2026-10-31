@@ -1,5 +1,7 @@
 ---
 // Keeps layout height reserved so ads loading late don't shift the page (CLS).
 // After ad approval, paste your ad unit code inside the div.
+interface Props { label?: string }
+const { label = 'Advertisement' } = Astro.props;
 ---
-<div class="ad-slot" aria-hidden="true">Ad space</div>
+<div class="ad-slot" aria-hidden="true">{label}</div>

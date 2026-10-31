@@ -45,7 +45,7 @@ const related = tool.related.map((s) => getTool(s, lang));
   <h1>{tool.h1}</h1>
   <p class="lead">{tool.intro}</p>
   {tool.kind === 'convert' ? <Converter tool={tool} lang={lang} /> : tool.kind === 'compress' ? <Compressor tool={tool} lang={lang} /> : tool.kind === 'resize' ? <Resizer tool={tool} lang={lang} /> : tool.kind === 'watermark' ? <Watermarker tool={tool} lang={lang} /> : <BgRemover tool={tool} lang={lang} />}
-  <AdSlot />
+  <AdSlot label={t.common.adLabel} />
   <Content tool={tool} lang={lang} />
   <Faq items={tool.faq} lang={lang} />
   <h2 class="rel-title">{t.content.related}</h2>

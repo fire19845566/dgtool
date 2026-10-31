@@ -31,7 +31,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "Choosing the quality setting",
         "p": [
-          "JPG is a lossy format, so each conversion trades a little detail for a smaller file. At 90% the difference is rarely visible on a screen, and the files stay a reasonable size. Lower the slider if you need smaller files, for example to email many photos. Going to 100% makes the files larger without a visible improvement in most cases."
+          "JPG is a lossy format, so converting gives up a little detail. HEIC compresses very efficiently, so the JPG is often larger than the original HEIC; the exact size depends on the photo and the quality setting. At 90% the difference is rarely visible on a screen, and the files stay a reasonable size. Lower the slider if you need smaller files, for example to email many photos. Going to 100% makes the files larger without a visible improvement in most cases."
         ]
       },
       {
@@ -264,7 +264,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "How image compression works",
         "p": [
-          "JPG and WebP are lossy formats. When an image is saved again at a lower quality, the file keeps most of what you can see and drops fine detail that is hard to notice, which makes the file smaller. Reducing the number of pixels shrinks the file even more."
+          "JPG is a lossy format, and WebP can be saved as lossy or lossless. When an image is saved again at a lower quality in a lossy format, the file keeps most of what you can see and drops fine detail that is hard to notice, which makes the file smaller. Reducing the number of pixels shrinks the file even more."
         ]
       },
       {
@@ -285,13 +285,13 @@ export const en: Record<string, ToolCopy> = {
         "h": "How PNG files are compressed",
         "p": [
           "PNG itself does not have a quality setting, so PNG images are made smaller by reducing the number of colors, up to 256, and saving the result as an indexed PNG. For logos, icons and screenshots this often makes the file much smaller with no visible change, and when an image already uses few colors the result looks identical to the original.",
-          "For photos saved as PNG, a low quality setting can cause visible banding in smooth areas, so keep the quality high, or choose WebP or JPG as the format for much smaller files. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency."
+          "For photos saved as PNG, a low quality setting can cause visible banding in smooth areas, so keep the quality high if you notice banding. If you want a much smaller file, you can also choose WebP or JPG as the format. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency."
         ]
       },
       {
         "h": "What is removed",
         "p": [
-          "Information stored inside the original file, such as camera details and the location where a photo was taken, is not copied into the compressed image. That also makes the result safer to share.",
+          "Information stored inside the original file, such as camera details and the location where a photo was taken, is not copied into the compressed image. If the original file is kept as it is, for example when it is already compressed enough, its camera and location details are kept too.",
           "If compressing would make a file larger than the original, the original is kept and marked as already well compressed."
         ]
       },
@@ -379,7 +379,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "Output format and quality",
         "p": [
-          "By default the image keeps its original format. You can also save as JPG, PNG or WebP. JPG and WebP are lossy, so the quality slider controls how much detail is kept; PNG is lossless. JPG cannot store transparency, so transparent areas are filled with white."
+          "By default the image keeps its original format. You can also save as JPG, PNG or WebP. JPG is lossy and WebP can be lossy or lossless, so the quality slider controls how much detail is kept in lossy files; PNG is lossless. JPG cannot store transparency, so transparent areas are filled with white."
         ]
       },
       {
@@ -451,7 +451,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "Output format and quality",
         "p": [
-          "By default each image keeps its original format. You can also save as JPG, PNG or WebP. JPG and WebP are lossy, so the quality slider controls how much detail is kept. JPG cannot store transparency, so transparent areas are filled with white."
+          "By default each image keeps its original format. You can also save as JPG, PNG or WebP. With JPG and WebP you can adjust the quality with the quality slider. JPG cannot store transparency, so transparent areas are filled with white."
         ]
       },
       {
@@ -502,8 +502,9 @@ export const en: Record<string, ToolCopy> = {
     "howTo": [
       "Click the upload area and choose JPG, PNG or WebP images, or drag them onto the page.",
       "Choose a method. By color suits plain backgrounds: the tool picks the color from the edges, and you can click the picture to choose another. AI suits busy backgrounds and finds the subject by itself.",
-      "Adjust Tolerance until all of the background is gone but the subject is intact.",
-      "Use Edge softness and Trim edges to clean up the outline. Choose Transparent or a Solid color for what replaces the background.",
+      "In By color mode, adjust Tolerance until all of the background is gone but the subject is intact. In AI mode, use Keep fine details to adjust the cut-out.",
+      "In By color mode, use Edge softness and Trim edges to clean up the outline. In AI mode, use the Keep and Erase brushes to fix parts that were missed or removed by mistake.",
+      "Choose Transparent to remove the background, or Solid color to replace it with another color.",
       "Check the results in the list, then download each image or use Download all."
     ],
     "sections": [
@@ -514,13 +515,13 @@ export const en: Record<string, ToolCopy> = {
         ]
       },
       {
-        "h": "What works well",
+        "h": "Images that suit By color mode",
         "p": [
           "Product photos on a white background, signatures and stamps on paper, logos, scans, drawings and ID photos taken against a plain wall usually give clean results. A background that is clearly different in color from the subject is the key."
         ]
       },
       {
-        "h": "What does not work well",
+        "h": "Images that are hard for By color mode",
         "p": [
           "Busy backgrounds such as streets, rooms or crowds cannot be removed by color. The same goes for photos where the subject has almost the same color as the background, and for soft shadows, which keep a little of the background color. Hair and fur against a plain wall can look rough at the edges.",
           "If your photo has a complicated background, switch to the AI method, which handles it much better."
@@ -562,7 +563,7 @@ export const en: Record<string, ToolCopy> = {
       },
       {
         "q": "Can I change the background of an ID photo to white or blue?",
-        "a": "Yes, if the original background is plain. Choose Solid color, pick the color you need, and save the result as JPG or PNG."
+        "a": "Yes. After the background is removed, choose Solid color, pick white, blue or the color you need, and save the result as JPG or PNG."
       },
       {
         "q": "Can I remove the background from iPhone HEIC photos?",
