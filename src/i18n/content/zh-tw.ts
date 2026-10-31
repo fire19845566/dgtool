@@ -451,7 +451,7 @@ export const zhTw: Record<string, ToolCopy> = {
       {
         "h": "輸出格式與品質",
         "p": [
-          "預設會讓每張圖維持原本的格式，你也可以存成 JPG、PNG 或 WebP。JPG 和 WebP 是破壞性壓縮，所以品質滑桿決定保留多少細節。JPG 無法儲存透明，透明區域會被填成白色。"
+          "預設會讓每張圖維持原本的格式，你也可以存成 JPG、PNG 或 WebP。JPG 和 WebP 可以用品質滑桿調整品質。JPG 無法儲存透明，透明區域會被填成白色。"
         ]
       },
       {

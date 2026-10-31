@@ -451,7 +451,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "Output format and quality",
         "p": [
-          "By default each image keeps its original format. You can also save as JPG, PNG or WebP. JPG and WebP are lossy, so the quality slider controls how much detail is kept. JPG cannot store transparency, so transparent areas are filled with white."
+          "By default each image keeps its original format. You can also save as JPG, PNG or WebP. With JPG and WebP you can adjust the quality with the quality slider. JPG cannot store transparency, so transparent areas are filled with white."
         ]
       },
       {
