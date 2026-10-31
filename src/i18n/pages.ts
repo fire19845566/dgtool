@@ -373,24 +373,24 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "DGTool について",
       "description": "DGTool は、ブラウザ上で動作する無料のオンラインツールを提供します。ファイルはお使いのデバイスに残ります。",
       "h1": "DGTool について",
-      "lead": "ブラウザ上で動作し、ファイルをお使いのデバイスに残したままにする無料のオンラインツールです。",
+      "lead": "ブラウザ上で動作し、ファイルをサーバーにアップロードせずに利用できる無料のオンラインツールです。",
       "sections": [
         {
           "h": "DGTool とは",
           "p": [
-            "DGTool は、日常のちょっとした作業のための、シンプルで無料のツールを作っている個人プロジェクトです。現在のツールには、iPhone の HEIC 写真を JPG や PNG に変換する、WebP 画像を JPG や PNG に変換するといった画像形式の変換と、画像の圧縮、リサイズ、透かしの追加、背景の削除があります。今後もツールを追加していきます。"
+            "DGTool は、日常のちょっとした作業のための、シンプルで無料のツールを開発・提供している個人プロジェクトです。現在は、iPhone の HEIC 写真や WebP 画像の JPG・PNG 変換、画像の圧縮、リサイズ、透かしの追加、背景の削除などのツールを提供しています。今後もツールを追加していきます。"
           ]
         },
         {
-          "h": "ほかとの違い",
+          "h": "DGTool の特長",
           "p": [
-            "多くのオンライン変換サイトは、ファイルをサーバーにアップロードするよう求めます。DGTool は、お使いのブラウザの中で処理を行います。写真が私たちに送信されることはなく、多くのファイルを扱うときも速いことが多く、画像のプライバシーも守られます。"
+            "多くのオンライン変換サイトは、ファイルをサーバーにアップロードするよう求めます。DGTool は、お使いのブラウザの中で処理を行います。画像が当サイトのサーバーに送信されることはなく、アップロードの待ち時間を省けるうえ、画像のプライバシーも守られます。"
           ]
         },
         {
           "h": "しくみ",
           "p": [
-            "ファイルを選ぶと、ページ上の小さなプログラムがお使いのデバイス上でそれを読み込み、変換します。完了したら、ブラウザから結果をそのままダウンロードできます。登録は不要で、ファイル数の制限も透かしもありません。"
+            "ファイルを選ぶと、ブラウザ内のプログラムがお使いのデバイス上でそれを読み込み、処理します。完了したら、ブラウザから結果をそのままダウンロードできます。会員登録は不要で、処理するファイル数に制限はありません。出力画像に DGTool の透かしが自動で追加されることもありません。"
           ]
         },
         {
@@ -408,7 +408,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "オープンソースのコンポーネント",
           "p": [
-            "DGTool はオープンソースソフトウェアを利用しています。HEIC のデコードには <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>（MIT ライセンス、Copyright (c) 2020 Alex Corvi）を使用しており、これには <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a> と関連するコーデックライブラリが含まれます。libheif は GNU Lesser General Public License（LGPL）で提供されており、ソースコードと正確なライセンス条件は libheif プロジェクトで入手できます。",
+            "DGTool はオープンソースソフトウェアを利用しています。HEIC のデコードには <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>（MIT ライセンス、Copyright (c) 2020 Alex Corvi）を使用しており、これには <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a> と関連するコーデックライブラリが含まれます。libheif は GNU Lesser General Public License（LGPL）で提供されており、ソースコードと詳細なライセンス条件は libheif プロジェクトで入手できます。",
             "AI による背景削除には、Xuebin Qin らの <a href=\"https://github.com/xuebinqin/U-2-Net\" target=\"_blank\" rel=\"noopener\">U²-Net</a> モデル（Apache License 2.0）と、Microsoft の <a href=\"https://github.com/microsoft/onnxruntime\" target=\"_blank\" rel=\"noopener\">ONNX Runtime Web</a>（MIT ライセンス）を使用しています。"
           ]
         },
