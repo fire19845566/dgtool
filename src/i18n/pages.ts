@@ -68,7 +68,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
     "title": "Privacy Policy | DGTool",
     "description": "How DGTool handles your files, cookies, advertising and personal data.",
     "h1": "Privacy policy",
-    "lead": "Last updated: October 17, 2026",
+    "lead": "Last updated: November 1, 2026",
     "sections": [
       {
         "h": "Your files stay on your device",
@@ -246,7 +246,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
     "title": "隱私權政策 | DGTool",
     "description": "說明 DGTool 如何處理你的檔案、Cookie、廣告與個人資料。",
     "h1": "隱私權政策",
-    "lead": "最後更新：2026 年 10 月 17 日",
+    "lead": "最後更新：2026 年 11 月 1 日",
     "sections": [
       {
         "h": "你的檔案留在你的裝置上",
@@ -424,7 +424,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "プライバシーポリシー | DGTool",
       "description": "DGTool がファイル、Cookie、広告、個人データをどのように扱うかについて説明します。",
       "h1": "プライバシーポリシー",
-      "lead": "最終更新日：2026 年 10 月 17 日",
+      "lead": "最終更新日：2026 年 11 月 1 日",
       "sections": [
         {
           "h": "ファイルはお使いのデバイスに残ります",
@@ -602,7 +602,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "개인정보처리방침 | DGTool",
       "description": "DGTool이 파일, 쿠키, 광고, 개인정보를 어떻게 처리하는지 설명합니다.",
       "h1": "개인정보처리방침",
-      "lead": "최종 업데이트: 2026년 10월 17일",
+      "lead": "최종 업데이트: 2026년 11월 1일",
       "sections": [
         {
           "h": "파일은 사용자의 기기에 남습니다",
