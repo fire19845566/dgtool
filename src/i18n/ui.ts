@@ -333,7 +333,7 @@ const ja: UI = {
   converter: {
     dropTitle: 'ファイルを選択、またはここにドロップ',
     dropSub: '複数のファイルをまとめて選択できます',
-    jpgQuality: 'JPG の品質',
+    jpgQuality: 'JPG の画質',
     converting: '変換中…',
     done: '完了 · {from} → {to}',
     failed: 'このファイルを変換できませんでした。変換元の形式（HEIC や WebP など）の画像ファイルかどうかをご確認ください。',
