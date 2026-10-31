@@ -336,7 +336,7 @@ const ja: UI = {
     jpgQuality: 'JPG の品質',
     converting: '変換中…',
     done: '完了 · {from} → {to}',
-    failed: 'このファイルを変換できませんでした。正しい形式の有効な画像かどうかご確認ください。',
+    failed: 'このファイルを変換できませんでした。変換元の形式（HEIC や WebP など）の画像ファイルかどうかをご確認ください。',
   },
   compressor: {
     dropTitle: '画像を選択、またはここにドロップ',
