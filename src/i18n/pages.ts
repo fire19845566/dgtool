@@ -131,7 +131,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
     "title": "Terms of Use | DGTool",
     "description": "The terms that apply when you use DGTool's free online tools.",
     "h1": "Terms of use",
-    "lead": "Last updated: October 17, 2026",
+    "lead": "Last updated: November 1, 2026",
     "sections": [
       {
         "h": "Acceptance of these terms",
@@ -148,7 +148,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "Your files",
         "p": [
-          "You keep all rights to the files you convert. Files are processed on your own device and are not uploaded to our servers. You are responsible for making sure you have the right to use and convert the files you choose."
+          "Any rights you already have in the files you process remain yours. Files are processed on your own device and are not uploaded to our servers. You are responsible for making sure you have the right to use and convert the files you choose."
         ]
       },
       {
@@ -309,7 +309,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
     "title": "使用條款 | DGTool",
     "description": "使用 DGTool 免費線上工具時適用的條款。",
     "h1": "使用條款",
-    "lead": "最後更新：2026 年 10 月 17 日",
+    "lead": "最後更新：2026 年 11 月 1 日",
     "sections": [
       {
         "h": "接受條款",
@@ -326,7 +326,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "你的檔案",
         "p": [
-          "你對自己轉換的檔案保有所有權利。檔案在你自己的裝置上處理，不會上傳到我們的伺服器。你有責任確保自己有權使用並轉換你所選擇的檔案。"
+          "你原本擁有的檔案權利仍歸你所有。檔案在你自己的裝置上處理，不會上傳到我們的伺服器。你有責任確保自己有權使用並轉換你所選擇的檔案。"
         ]
       },
       {
@@ -487,7 +487,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "利用規約 | DGTool",
       "description": "DGTool の無料オンラインツールをご利用いただく際に適用される規約です。",
       "h1": "利用規約",
-      "lead": "最終更新日：2026 年 10 月 17 日",
+      "lead": "最終更新日：2026 年 11 月 1 日",
       "sections": [
         {
           "h": "規約への同意",
@@ -665,7 +665,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "이용약관 | DGTool",
       "description": "DGTool 무료 온라인 도구를 사용할 때 적용되는 약관입니다.",
       "h1": "이용약관",
-      "lead": "최종 업데이트: 2026년 10월 17일",
+      "lead": "최종 업데이트: 2026년 11월 1일",
       "sections": [
         {
           "h": "약관의 동의",
@@ -682,7 +682,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "사용자의 파일",
           "p": [
-            "변환하는 파일에 대한 모든 권리는 사용자에게 있습니다. 파일은 사용자의 기기에서 처리되며 저희 서버에 업로드되지 않습니다. 선택한 파일을 사용하고 변환할 권리가 있는지 확인할 책임은 사용자에게 있습니다."
+            "처리하는 파일에 대해 사용자가 원래 가지고 있던 권리는 계속 사용자에게 있습니다. 파일은 사용자의 기기에서 처리되며 저희 서버에 업로드되지 않습니다. 선택한 파일을 사용하고 변환할 권리가 있는지 확인할 책임은 사용자에게 있습니다."
           ]
         },
         {
