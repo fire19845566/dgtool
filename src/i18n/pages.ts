@@ -34,7 +34,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "How it works",
         "p": [
-          "When you pick a file, a small program on the page reads it and converts it on your device. When it finishes, you download the result straight from your browser. There is no sign-up, no file limit and no watermark."
+          "When you pick a file, a small program on the page reads it and converts it on your device. When it finishes, you download the result straight from your browser. There is no sign-up and no file limit, and DGTool never adds its own watermark to your output images."
         ]
       },
       {
@@ -212,7 +212,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "運作方式",
         "p": [
-          "選擇檔案之後，頁面上的一小段程式會在你的裝置上讀取並轉換它。完成後，你可以直接從瀏覽器下載結果。不需要註冊，沒有檔案數量限制，也沒有浮水印。"
+          "選擇檔案之後，頁面上的一小段程式會在你的裝置上讀取並轉換它。完成後，你可以直接從瀏覽器下載結果。不需要註冊，沒有檔案數量限制，輸出的圖片也不會被自動加上 DGTool 的浮水印。"
         ]
       },
       {
@@ -568,7 +568,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "작동 방식",
           "p": [
-            "파일을 선택하면 페이지 안의 작은 프로그램이 사용자의 기기에서 파일을 읽어 변환합니다. 작업이 끝나면 브라우저에서 바로 결과를 다운로드할 수 있습니다. 가입이 필요 없고, 파일 개수 제한도 워터마크도 없습니다."
+            "파일을 선택하면 페이지 안의 작은 프로그램이 사용자의 기기에서 파일을 읽어 변환합니다. 작업이 끝나면 브라우저에서 바로 결과를 다운로드할 수 있습니다. 가입이 필요 없고 파일 개수 제한도 없으며, 출력 이미지에 DGTool 워터마크가 자동으로 추가되지 않습니다."
           ]
         },
         {
