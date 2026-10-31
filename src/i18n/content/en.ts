@@ -264,7 +264,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "How image compression works",
         "p": [
-          "JPG and WebP are lossy formats. When an image is saved again at a lower quality, the file keeps most of what you can see and drops fine detail that is hard to notice, which makes the file smaller. Reducing the number of pixels shrinks the file even more."
+          "JPG is a lossy format, and WebP can be saved as lossy or lossless. When an image is saved again at a lower quality in a lossy format, the file keeps most of what you can see and drops fine detail that is hard to notice, which makes the file smaller. Reducing the number of pixels shrinks the file even more."
         ]
       },
       {
@@ -285,13 +285,13 @@ export const en: Record<string, ToolCopy> = {
         "h": "How PNG files are compressed",
         "p": [
           "PNG itself does not have a quality setting, so PNG images are made smaller by reducing the number of colors, up to 256, and saving the result as an indexed PNG. For logos, icons and screenshots this often makes the file much smaller with no visible change, and when an image already uses few colors the result looks identical to the original.",
-          "For photos saved as PNG, a low quality setting can cause visible banding in smooth areas, so keep the quality high, or choose WebP or JPG as the format for much smaller files. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency."
+          "For photos saved as PNG, a low quality setting can cause visible banding in smooth areas, so keep the quality high if you notice banding. If you want a much smaller file, you can also choose WebP or JPG as the format. JPG cannot store transparency, so transparent areas are filled with white. WebP keeps transparency."
         ]
       },
       {
         "h": "What is removed",
         "p": [
-          "Information stored inside the original file, such as camera details and the location where a photo was taken, is not copied into the compressed image. That also makes the result safer to share.",
+          "Information stored inside the original file, such as camera details and the location where a photo was taken, is not copied into the compressed image. If the original file is kept as it is, for example when it is already compressed enough, its camera and location details are kept too.",
           "If compressing would make a file larger than the original, the original is kept and marked as already well compressed."
         ]
       },
