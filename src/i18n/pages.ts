@@ -131,7 +131,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
     "title": "Terms of Use | DGTool",
     "description": "The terms that apply when you use DGTool's free online tools.",
     "h1": "Terms of use",
-    "lead": "Last updated: October 17, 2026",
+    "lead": "Last updated: November 1, 2026",
     "sections": [
       {
         "h": "Acceptance of these terms",
@@ -148,7 +148,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "Your files",
         "p": [
-          "You keep all rights to the files you convert. Files are processed on your own device and are not uploaded to our servers. You are responsible for making sure you have the right to use and convert the files you choose."
+          "Any rights you already have in the files you process remain yours. Files are processed on your own device and are not uploaded to our servers. You are responsible for making sure you have the right to use and convert the files you choose."
         ]
       },
       {
@@ -309,7 +309,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
     "title": "使用條款 | DGTool",
     "description": "使用 DGTool 免費線上工具時適用的條款。",
     "h1": "使用條款",
-    "lead": "最後更新：2026 年 10 月 17 日",
+    "lead": "最後更新：2026 年 11 月 1 日",
     "sections": [
       {
         "h": "接受條款",
@@ -326,7 +326,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       {
         "h": "你的檔案",
         "p": [
-          "你對自己轉換的檔案保有所有權利。檔案在你自己的裝置上處理，不會上傳到我們的伺服器。你有責任確保自己有權使用並轉換你所選擇的檔案。"
+          "你原本擁有的檔案權利仍歸你所有。檔案在你自己的裝置上處理，不會上傳到我們的伺服器。你有責任確保自己有權使用並轉換你所選擇的檔案。"
         ]
       },
       {
@@ -487,7 +487,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "利用規約 | DGTool",
       "description": "DGTool の無料オンラインツールをご利用いただく際に適用される規約です。",
       "h1": "利用規約",
-      "lead": "最終更新日：2026 年 10 月 17 日",
+      "lead": "最終更新日：2026 年 11 月 1 日",
       "sections": [
         {
           "h": "規約への同意",
@@ -498,25 +498,25 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "サービスの内容",
           "p": [
-            "DGTool は、お使いのウェブブラウザ上でファイルを処理する無料のツールを提供します。ツールは、予告なく追加、変更、削除されることがあります。"
+            "DGTool は、お使いのウェブブラウザ上でファイルを処理する無料のツールを提供します。ツールの追加・変更・提供終了を、予告なく行う場合があります。"
           ]
         },
         {
           "h": "お客様のファイル",
           "p": [
-            "変換したファイルに関するすべての権利は、お客様に帰属します。ファイルはお使いのデバイス上で処理され、当サイトのサーバーにアップロードされることはありません。選択したファイルを使用し、変換する権利をお持ちであることを確認する責任は、お客様にあります。"
+            "処理対象のファイルに関してお客様が有する権利は、引き続きお客様に帰属します。ファイルはお使いのデバイス上で処理され、当サイトのサーバーにアップロードされることはありません。選択したファイルを使用し、処理する権利をお持ちであることを確認する責任は、お客様にあります。"
           ]
         },
         {
-          "h": "許可される利用方法",
+          "h": "禁止事項",
           "p": [
-            "お客様は、当サイトを法律に違反する目的で使用すること、他者の権利を侵害すること、当サイトやそのホスティングサービスを妨害したり、妨害しようとしたりすることをしないものとします。また、当サイトのツールやコンテンツを、出所を誤認させる形で複製または再販しないものとします。"
+            "次の行為を禁止します。法律に違反する目的で当サイトを使用すること、他者の権利を侵害すること、当サイトやそのホスティングサービスを妨害すること、またはその妨害を試みること、当サイトのツールやコンテンツを、出所を誤認させる形で複製または再販すること。"
           ]
         },
         {
           "h": "保証の否認",
           "p": [
-            "これらのツールは「現状有姿」かつ「提供可能な範囲」で提供され、いかなる種類の保証もありません。変換結果に誤りがないこと、出力の品質がお客様のニーズを満たすこと、サイトが常に利用できることを、当サイトは保証しません。元のファイルを保管し、結果を信頼する前に確認してください。"
+            "これらのツールは「現状有姿」かつ「提供可能な状態」で提供され、いかなる種類の保証もありません。処理結果に誤りがないこと、出力結果の品質がお客様のニーズを満たすこと、サイトが常に利用できることを、当サイトは保証しません。元のファイルを保管し、処理結果を利用する前に、内容をご確認ください。"
           ]
         },
         {
@@ -528,13 +528,13 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "広告と第三者のサービス",
           "p": [
-            "当サイトは広告を表示することがあり、Cloudflare や Google Fonts などの第三者のサービスを利用しています。当サイトは、第三者のコンテンツや取り扱いについて責任を負いません。詳細は<a href=\"{privacy}\">プライバシーポリシー</a>をご覧ください。"
+            "当サイトは広告を表示することがあり、Cloudflare や Google Fonts などの第三者のサービスを利用しています。当サイトは、第三者が提供するコンテンツ、およびその運営や個人情報の取扱いについて責任を負いません。詳細は<a href=\"{privacy}\">プライバシーポリシー</a>をご覧ください。"
           ]
         },
         {
           "h": "規約の変更",
           "p": [
-            "本規約は随時更新されることがあります。規約の変更後も当サイトを引き続きご利用になることは、更新後の規約に同意したものとみなされます。ページ上部の日付は、最後に変更された日を示しています。"
+            "本規約は随時更新されることがあります。規約の変更後も当サイトを引き続きご利用になった場合は、更新後の規約に同意したものとみなされます。本規約の最終更新日は、ページ上部に記載しています。"
           ]
         },
         {
@@ -665,7 +665,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "이용약관 | DGTool",
       "description": "DGTool 무료 온라인 도구를 사용할 때 적용되는 약관입니다.",
       "h1": "이용약관",
-      "lead": "최종 업데이트: 2026년 10월 17일",
+      "lead": "최종 업데이트: 2026년 11월 1일",
       "sections": [
         {
           "h": "약관의 동의",
@@ -682,7 +682,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "사용자의 파일",
           "p": [
-            "변환하는 파일에 대한 모든 권리는 사용자에게 있습니다. 파일은 사용자의 기기에서 처리되며 저희 서버에 업로드되지 않습니다. 선택한 파일을 사용하고 변환할 권리가 있는지 확인할 책임은 사용자에게 있습니다."
+            "처리하는 파일에 대해 사용자가 원래 가지고 있던 권리는 계속 사용자에게 있습니다. 파일은 사용자의 기기에서 처리되며 저희 서버에 업로드되지 않습니다. 선택한 파일을 사용하고 변환할 권리가 있는지 확인할 책임은 사용자에게 있습니다."
           ]
         },
         {
