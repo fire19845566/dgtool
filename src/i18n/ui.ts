@@ -17,7 +17,7 @@ const en = {
     },
   },
   content: { howToConvert: 'How to convert {name}', howToCompress: 'How to compress images', howToResize: 'How to resize images', howToWatermark: 'How to add a watermark', howToRemoveBg: 'How to remove a background', faq: 'Frequently asked questions', related: 'Related tools' },
-  common: { download: 'Download', downloadAll: 'Download all', clear: 'Clear list', waiting: 'Waiting…' },
+  common: { download: 'Download', downloadAll: 'Download all', clear: 'Clear list', waiting: 'Waiting…', adLabel: 'Advertisement' },
   converter: {
     dropTitle: 'Choose files or drop them here',
     dropSub: 'You can select several at once',
@@ -174,7 +174,7 @@ const zhTw: UI = {
     },
   },
   content: { howToConvert: '如何使用 {name}', howToCompress: '如何壓縮圖片', howToResize: '如何縮放圖片', howToWatermark: '如何加入浮水印', howToRemoveBg: '如何去背', faq: '常見問題', related: '相關工具' },
-  common: { download: '下載', downloadAll: '全部下載', clear: '清除清單', waiting: '等待中…' },
+  common: { download: '下載', downloadAll: '全部下載', clear: '清除清單', waiting: '等待中…', adLabel: '廣告' },
   converter: {
     dropTitle: '選擇檔案或拖曳到這裡',
     dropSub: '可以一次選擇多個檔案',
@@ -329,7 +329,7 @@ const ja: UI = {
     },
   },
   content: { howToConvert: '{name}する方法', howToCompress: '画像を圧縮する方法', howToResize: '画像をリサイズする方法', howToWatermark: '透かしを追加する方法', howToRemoveBg: '背景を削除する方法', faq: 'よくある質問', related: '関連ツール' },
-  common: { download: 'ダウンロード', downloadAll: 'すべてダウンロード', clear: 'リストをクリア', waiting: '待機中…' },
+  common: { download: 'ダウンロード', downloadAll: 'すべてダウンロード', clear: 'リストをクリア', waiting: '待機中…', adLabel: '広告' },
   converter: {
     dropTitle: 'ファイルを選択、またはここにドロップ',
     dropSub: '複数のファイルをまとめて選択できます',
@@ -484,7 +484,7 @@ const ko: UI = {
     },
   },
   content: { howToConvert: '{name}하는 방법', howToCompress: '이미지를 압축하는 방법', howToResize: '이미지 크기를 조절하는 방법', howToWatermark: '워터마크를 추가하는 방법', howToRemoveBg: '배경을 제거하는 방법', faq: '자주 묻는 질문', related: '관련 도구' },
-  common: { download: '다운로드', downloadAll: '모두 다운로드', clear: '목록 지우기', waiting: '대기 중…' },
+  common: { download: '다운로드', downloadAll: '모두 다운로드', clear: '목록 지우기', waiting: '대기 중…', adLabel: '광고' },
   converter: {
     dropTitle: '파일을 선택하거나 여기에 끌어다 놓으세요',
     dropSub: '여러 파일을 한 번에 선택할 수 있습니다',

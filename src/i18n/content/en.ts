@@ -31,7 +31,7 @@ export const en: Record<string, ToolCopy> = {
       {
         "h": "Choosing the quality setting",
         "p": [
-          "JPG is a lossy format, so each conversion trades a little detail for a smaller file. At 90% the difference is rarely visible on a screen, and the files stay a reasonable size. Lower the slider if you need smaller files, for example to email many photos. Going to 100% makes the files larger without a visible improvement in most cases."
+          "JPG is a lossy format, so converting gives up a little detail. HEIC compresses very efficiently, so the JPG is often larger than the original HEIC; the exact size depends on the photo and the quality setting. At 90% the difference is rarely visible on a screen, and the files stay a reasonable size. Lower the slider if you need smaller files, for example to email many photos. Going to 100% makes the files larger without a visible improvement in most cases."
         ]
       },
       {
