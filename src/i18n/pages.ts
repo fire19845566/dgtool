@@ -551,30 +551,30 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
       "title": "사이트 소개 | DGTool",
       "description": "DGTool은 브라우저에서 실행되는 무료 온라인 도구를 제공합니다. 파일은 사용자의 기기에 그대로 남습니다.",
       "h1": "DGTool 소개",
-      "lead": "브라우저에서 실행되며 파일을 사용자의 기기에 그대로 두는 무료 온라인 도구입니다.",
+      "lead": "파일을 서버로 전송하지 않고 브라우저에서 바로 사용할 수 있는 무료 온라인 도구 모음입니다.",
       "sections": [
         {
           "h": "DGTool이란",
           "p": [
-            "DGTool은 일상에서 마주치는 작은 작업을 위한 간단하고 무료인 도구를 만드는 개인 프로젝트입니다. 현재 제공하는 도구에는 iPhone의 HEIC 사진을 JPG나 PNG로 바꾸고 WebP 이미지를 JPG나 PNG로 바꾸는 이미지 형식 변환, 이미지 압축, 이미지 크기 조절, 워터마크 추가, 그리고 배경 제거가 있습니다. 앞으로도 도구를 계속 추가할 예정입니다."
+            "DGTool은 일상적인 작업을 간편하게 처리할 수 있도록 무료 온라인 도구를 제공하는 개인 프로젝트입니다. 현재 iPhone의 HEIC 사진과 WebP 이미지를 JPG 또는 PNG로 변환하는 도구를 비롯해, 이미지 압축, 크기 조절, 워터마크 추가, 배경 제거 도구를 제공합니다. 앞으로도 도구를 계속 추가할 예정입니다."
           ]
         },
         {
           "h": "무엇이 다른가요",
           "p": [
-            "많은 온라인 변환 사이트는 파일을 서버에 업로드하라고 요구합니다. DGTool은 사용자의 브라우저 안에서 작업을 처리합니다. 사진이 저희에게 전송되지 않고, 파일이 많을 때도 대개 더 빠르며, 이미지의 개인정보도 지킬 수 있습니다."
+            "많은 온라인 변환 사이트는 파일을 서버에 업로드하라고 요구합니다. DGTool은 사용자의 브라우저 안에서 작업을 처리합니다. 사진이 서버로 전송되지 않아 사진에 담긴 개인정보를 보호할 수 있으며, 여러 파일을 처리할 때도 대체로 더 빠르게 작업할 수 있습니다."
           ]
         },
         {
           "h": "작동 방식",
           "p": [
-            "파일을 선택하면 페이지 안의 작은 프로그램이 사용자의 기기에서 파일을 읽어 변환합니다. 작업이 끝나면 브라우저에서 바로 결과를 다운로드할 수 있습니다. 가입이 필요 없고 파일 개수 제한도 없으며, 출력 이미지에 DGTool 워터마크가 자동으로 추가되지 않습니다."
+            "선택한 파일은 사용 중인 기기의 브라우저에서 처리됩니다. 작업이 끝나면 브라우저에서 바로 결과를 다운로드할 수 있습니다. 가입이 필요 없고 파일 개수 제한도 없으며, 출력 이미지에 DGTool 워터마크가 자동으로 추가되지 않습니다."
           ]
         },
         {
           "h": "사이트 운영 방식",
           "p": [
-            "DGTool은 무료로 사용할 수 있습니다. 호스팅과 개발 비용을 충당하기 위해 사이트에 광고가 표시될 수 있습니다. 광고와 쿠키가 어떻게 처리되는지는 <a href=\"{privacy}\">개인정보처리방침</a>에서 확인할 수 있습니다."
+            "DGTool은 무료로 사용할 수 있습니다. 호스팅과 개발 비용을 충당하기 위해 사이트에 광고가 표시될 수 있습니다. 광고 게재와 쿠키 사용에 관한 자세한 내용은 <a href=\"{privacy}\">개인정보처리방침</a>에서 확인할 수 있습니다."
           ]
         },
         {
@@ -586,7 +586,7 @@ export const pages: Record<Lang, Record<PageKey, PageDoc>> = {
         {
           "h": "오픈소스 구성 요소",
           "p": [
-            "DGTool은 오픈소스 소프트웨어로 만들어졌습니다. HEIC 디코딩에는 <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>(MIT 라이선스, Copyright (c) 2020 Alex Corvi)를 사용하며, 여기에는 <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a>와 관련 코덱 라이브러리가 포함되어 있습니다. libheif는 GNU Lesser General Public License(LGPL)로 제공되며, 소스 코드와 정확한 라이선스 조건은 libheif 프로젝트에서 확인할 수 있습니다.",
+            "DGTool은 오픈소스 소프트웨어를 활용해 개발되었습니다. HEIC 디코딩에는 <a href=\"https://github.com/alexcorvi/heic2any\" target=\"_blank\" rel=\"noopener\">heic2any</a>(MIT 라이선스, Copyright (c) 2020 Alex Corvi)를 사용하며, 여기에는 <a href=\"https://github.com/strukturag/libheif\" target=\"_blank\" rel=\"noopener\">libheif</a>와 관련 코덱 라이브러리가 포함되어 있습니다. libheif는 GNU Lesser General Public License(LGPL)로 제공되며, 소스 코드와 정확한 라이선스 조건은 libheif 프로젝트에서 확인할 수 있습니다.",
             "AI 배경 제거에는 Xuebin Qin 등의 <a href=\"https://github.com/xuebinqin/U-2-Net\" target=\"_blank\" rel=\"noopener\">U²-Net</a> 모델(Apache License 2.0)과 Microsoft의 <a href=\"https://github.com/microsoft/onnxruntime\" target=\"_blank\" rel=\"noopener\">ONNX Runtime Web</a>(MIT 라이선스)를 사용합니다."
           ]
         },
