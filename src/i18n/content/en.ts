@@ -247,6 +247,134 @@ export const en: Record<string, ToolCopy> = {
       }
     ]
   },
+  "avif-to-jpg": {
+    "name": "AVIF to JPG",
+    "h1": "AVIF to JPG, instantly",
+    "title": "AVIF to JPG Converter – Free, Private, No Upload",
+    "description": "Convert AVIF images to JPG in your browser. No upload, no sign-up, no limits.",
+    "intro": "Save AVIF images as JPG so they open in more apps. Files are not uploaded to a server, and there is no sign-up or file limit.",
+    "howTo": [
+      "Click the file selection area and choose one or more AVIF files, or drag them onto it.",
+      "Leave the quality at 90% for a good balance of quality and file size, or move the slider.",
+      "Wait a moment while each image is converted on your device.",
+      "Click Download next to an image, or use Download all to save every result."
+    ],
+    "sections": [
+      {
+        "h": "What is an AVIF image?",
+        "p": [
+          "AVIF is an image format based on the AV1 video codec, developed by the Alliance for Open Media. At similar visual quality it can produce smaller files than JPG, and it supports transparency, so some websites and apps use it for photos and graphics.",
+          "The catch is that some older editors, upload forms and printers do not accept .avif files."
+        ]
+      },
+      {
+        "h": "Why convert AVIF to JPG?",
+        "p": [
+          "JPG is supported by most apps and websites. Converting an AVIF image to JPG makes it easier to insert into a document, share with someone, or upload to a site that does not accept AVIF."
+        ]
+      },
+      {
+        "h": "What happens to transparent areas?",
+        "p": [
+          "JPG cannot store transparency. If your AVIF image has transparent areas, they are filled with white in the JPG. If you need to keep the transparency, use the AVIF to PNG converter instead."
+        ]
+      },
+      {
+        "h": "What to expect",
+        "p": [
+          "An animated AVIF is converted to a single still image, using its first frame, because JPG cannot store animation. Colors in HDR or wide-gamut images may look slightly different after conversion. Information stored in the original file, such as camera details or shooting location, is not copied to the JPG."
+        ]
+      },
+      {
+        "h": "Choosing the quality setting",
+        "p": [
+          "JPG is a lossy format, so a lower quality makes a smaller file with a little less detail. 90% is a good default. Lower it if you need a smaller file, and keep it high for images you want to stay sharp."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Why can't I open my AVIF file?",
+        "a": "Some older editors, upload forms and printers do not support AVIF. Converting the file to JPG lets you use it in most apps and websites."
+      },
+      {
+        "q": "What happens to transparent areas?",
+        "a": "JPG does not support transparency, so transparent areas are filled with white. Use AVIF to PNG if you want to keep transparency."
+      },
+      {
+        "q": "What happens to an animated AVIF?",
+        "a": "It is converted to a still image using the first frame, because JPG cannot store animation."
+      },
+      {
+        "q": "Why did my file fail to convert?",
+        "a": "Conversion uses your browser's own AVIF decoder, so a very old browser may not be able to read the file. Try updating your browser or using a different one."
+      },
+      {
+        "q": "Are my files uploaded?",
+        "a": "No. The files are not uploaded to a server, and everything is converted in your browser on your own device."
+      }
+    ]
+  },
+  "avif-to-png": {
+    "name": "AVIF to PNG",
+    "h1": "AVIF to PNG, keeping transparency",
+    "title": "AVIF to PNG Converter – Free, Private, No Upload",
+    "description": "Convert AVIF images to PNG in your browser and keep transparency. No upload required.",
+    "intro": "Convert AVIF to PNG and keep transparent backgrounds. Files are not uploaded to a server.",
+    "howTo": [
+      "Click the file selection area and choose one or more AVIF files, or drag them onto it.",
+      "Wait a moment while each image is converted on your device.",
+      "Click Download next to an image, or use Download all to save every result."
+    ],
+    "sections": [
+      {
+        "h": "What is an AVIF image?",
+        "p": [
+          "AVIF is an image format based on the AV1 video codec, developed by the Alliance for Open Media. It often produces small files and supports transparency, but some older editors and upload forms still cannot open it."
+        ]
+      },
+      {
+        "h": "Why convert AVIF to PNG?",
+        "p": [
+          "PNG is supported by most apps and keeps transparent backgrounds, which makes it a good choice for logos, icons and graphics that you want to place on top of other images or backgrounds."
+        ]
+      },
+      {
+        "h": "Transparency is kept",
+        "p": [
+          "Transparent areas in your AVIF image stay transparent in the PNG. If you convert to JPG instead, transparent areas become white, because JPG cannot store transparency."
+        ]
+      },
+      {
+        "h": "What to expect",
+        "p": [
+          "PNG files are usually larger than AVIF files, and the difference can be large for photos. An animated AVIF is converted to a single still image, using its first frame. Colors in HDR or wide-gamut images may look slightly different after conversion."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Is transparency preserved?",
+        "a": "Yes. PNG supports transparency, so transparent AVIF areas stay transparent."
+      },
+      {
+        "q": "Why is the PNG larger than the AVIF?",
+        "a": "AVIF compresses images very efficiently, while PNG uses lossless compression. When you convert a photo to PNG, the file can become much larger."
+      },
+      {
+        "q": "What happens to an animated AVIF?",
+        "a": "It is converted to a still image using the first frame."
+      },
+      {
+        "q": "Why did my file fail to convert?",
+        "a": "Conversion uses your browser's own AVIF decoder, so a very old browser may not be able to read the file. Try updating your browser or using a different one."
+      },
+      {
+        "q": "Are my files uploaded?",
+        "a": "No. The files are not uploaded to a server, and everything is converted in your browser on your own device."
+      }
+    ]
+  },
   "compress-image": {
     "name": "Compress Image",
     "h1": "Compress images without uploading them",
