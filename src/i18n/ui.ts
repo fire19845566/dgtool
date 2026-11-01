@@ -488,10 +488,10 @@ const ko: UI = {
   converter: {
     dropTitle: '파일을 선택하거나 여기에 끌어다 놓으세요',
     dropSub: '여러 파일을 한 번에 선택할 수 있습니다',
-    jpgQuality: 'JPG 품질',
+    jpgQuality: 'JPG 화질',
     converting: '변환 중…',
     done: '완료 · {from} → {to}',
-    failed: '이 파일을 변환할 수 없습니다. 올바른 형식의 유효한 이미지인지 확인하세요.',
+    failed: '이 파일을 변환할 수 없습니다. 지원하는 형식의 이미지 파일인지 확인해 주세요.',
   },
   compressor: {
     dropTitle: '이미지를 선택하거나 여기에 끌어다 놓으세요',
